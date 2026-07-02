@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bike-rental/internal/domain"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -22,12 +23,18 @@ func (h *PaymentHandler) CreateOrder(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
 	}
+	if req.BookingID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "booking_id is required"})
+	}
+	if req.Amount <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "amount must be greater than zero"})
+	}
 
 	payment, err := h.service.CreateOrder(req.BookingID, req.Amount)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.JSON(payment)
+	return c.Status(fiber.StatusCreated).JSON(payment)
 }
 
 func (h *PaymentHandler) VerifyPayment(c *fiber.Ctx) error {
@@ -67,11 +74,16 @@ func (h *PaymentHandler) GetPaymentDetails(c *fiber.Ctx) error {
 }
 
 func (h *PaymentHandler) GetPaymentHistory(c *fiber.Ctx) error {
-	payments, err := h.service.GetPaymentHistory(0, 10)
+	offset, limit := parsePagination(c)
+	payments, err := h.service.GetPaymentHistory(offset, limit)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.JSON(payments)
+	return c.JSON(fiber.Map{
+		"data":   payments,
+		"offset": offset,
+		"limit":  limit,
+	})
 }
 
 func (h *PaymentHandler) ProcessRefund(c *fiber.Ctx) error {
