@@ -1,78 +1,123 @@
 package main
 
 import (
-	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 
 	"bike-rental/internal/application"
 	"bike-rental/internal/config"
+	"bike-rental/internal/database"
 	"bike-rental/internal/handler"
 	"bike-rental/internal/middleware"
 	"bike-rental/internal/repository"
 )
 
 func main() {
+	// Configure structured logging
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	if os.Getenv("ENVIRONMENT") != "production" {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
+
 	// Load configuration
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+		log.Fatal().Err(err).Msg("Failed to load configuration")
 	}
 
+	// Connect to database
+	pool, err := database.NewPostgresPool(cfg)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to connect to database")
+	}
+	defer pool.Close()
+
+	// Run migrations
+	if err := database.RunMigrations(pool); err != nil {
+		log.Fatal().Err(err).Msg("Failed to run migrations")
+	}
+
+	// Initialize Fiber app
 	app := fiber.New(fiber.Config{
 		ErrorHandler: middleware.CentralErrorHandler,
+		BodyLimit:    5 * 1024 * 1024, // 5MB max body size
 	})
 
-	// Middleware
+	// Global middleware
 	app.Use(recover.New())
-	app.Use(logger.New())
-	app.Use(cors.New())
+	app.Use(middleware.SecurityHeaders())
+	app.Use(middleware.RequestLogger())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     cfg.CORSAllowOrigins,
+		AllowMethods:     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		AllowCredentials: true,
+	}))
 
 	// Health Endpoints
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
 	app.Get("/ready", func(c *fiber.Ctx) error {
+		if err := pool.Ping(c.Context()); err != nil {
+			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"status": "not ready", "error": "database unavailable"})
+		}
 		return c.JSON(fiber.Map{"status": "ready"})
 	})
 
 	// Setup API Version 1
 	api := app.Group("/api/v1")
 
-	// Auth Routes (Phase 5)
-	authHandler := handler.NewAuthHandler()
+	// --- Repositories ---
+	userRepo := repository.NewUserRepository(pool)
+	bikeRepo := repository.NewBikeRepository(pool)
+	bookingRepo := repository.NewBookingRepository(pool)
+	paymentRepo := repository.NewPaymentRepository(pool)
+	kycRepo := repository.NewKYCRepository(pool)
+
+	// --- Services ---
+	authService := application.NewAuthService(userRepo, cfg)
+	bikeService := application.NewBikeService(bikeRepo)
+	bookingService := application.NewBookingService(bookingRepo, bikeRepo)
+	paymentService := application.NewPaymentService(paymentRepo, nil)
+	kycService := application.NewKYCService(kycRepo)
+
+	// --- Handlers ---
+	authHandler := handler.NewAuthHandler(authService)
+	bikeHandler := handler.NewBikeHandler(bikeService)
+	bookingHandler := handler.NewBookingHandler(bookingService)
+	paymentHandler := handler.NewPaymentHandler(paymentService)
+	kycHandler := handler.NewKYCHandler(kycService)
+
+	// --- Auth Routes (with rate limiting) ---
 	authGroup := api.Group("/auth")
+	authGroup.Use(middleware.RateLimiter(cfg.RateLimitRequests, cfg.RateLimitWindow))
 	authGroup.Post("/send-otp", authHandler.SendOTP)
 	authGroup.Post("/verify-otp", authHandler.VerifyOTP)
 	authGroup.Post("/login", authHandler.Login)
 	authGroup.Post("/refresh", authHandler.RefreshToken)
 	authGroup.Post("/logout", authHandler.Logout)
 
-	// Protected Profile Routes
+	// --- Protected Profile Routes ---
 	profileGroup := api.Group("/profile")
 	profileGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
 	profileGroup.Get("/", authHandler.GetProfile)
 	profileGroup.Put("/", authHandler.UpdateProfile)
 	profileGroup.Delete("/", authHandler.DeleteProfile)
 
-	// Bike Module (Phase 6)
-	bikeRepo := repository.NewBikeRepository()
-	bikeService := application.NewBikeService(bikeRepo)
-	bikeHandler := handler.NewBikeHandler(bikeService)
-
-	// Booking Module (Phase 7)
-	bookingRepo := repository.NewBookingRepository()
-	bookingService := application.NewBookingService(bookingRepo, bikeRepo)
-	bookingHandler := handler.NewBookingHandler(bookingService)
-
-	// Admin Bike Routes
+	// --- Admin Routes ---
 	adminGroup := api.Group("/admin")
 	adminGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
 	adminGroup.Use(middleware.RoleMiddleware("ADMIN", "OWNER"))
-	
+
+	// Admin Bike Routes
 	adminBikeGroup := adminGroup.Group("/bikes")
 	adminBikeGroup.Post("/", bikeHandler.AddBike)
 	adminBikeGroup.Put("/:id", bikeHandler.EditBike)
@@ -91,14 +136,20 @@ func main() {
 	adminBookingGroup.Patch("/:id/return", bookingHandler.MarkReturned)
 	adminBookingGroup.Patch("/:id/complete", bookingHandler.CompleteBooking)
 
-	// Customer/Public Bike Routes
+	// Admin KYC Routes
+	adminKYCGroup := adminGroup.Group("/kyc")
+	adminKYCGroup.Get("/pending", kycHandler.GetPendingKYC)
+	adminKYCGroup.Patch("/:id/approve", kycHandler.ApproveKYC)
+	adminKYCGroup.Patch("/:id/reject", kycHandler.RejectKYC)
+
+	// --- Public Bike Routes ---
 	bikeGroup := api.Group("/bikes")
 	bikeGroup.Get("/", bikeHandler.GetBikes)
 	bikeGroup.Get("/search", bikeHandler.SearchBikes)
 	bikeGroup.Get("/categories", bikeHandler.GetCategories)
 	bikeGroup.Get("/:id", bikeHandler.GetBikeDetails)
 
-	// Customer Booking Routes
+	// --- Customer Booking Routes ---
 	customerBookingGroup := api.Group("/bookings")
 	customerBookingGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
 	customerBookingGroup.Post("/", bookingHandler.CreateBooking)
@@ -107,17 +158,7 @@ func main() {
 	customerBookingGroup.Get("/:id", bookingHandler.GetBookingDetails)
 	customerBookingGroup.Delete("/:id", bookingHandler.CancelBooking)
 
-	// Payment Module (Phase 8)
-	paymentRepo := repository.NewPaymentRepository()
-	paymentService := application.NewPaymentService(paymentRepo, nil) // Mock Gateway for now
-	paymentHandler := handler.NewPaymentHandler(paymentService)
-
-	// KYC Module (Phase 8)
-	kycRepo := repository.NewKYCRepository()
-	kycService := application.NewKYCService(kycRepo)
-	kycHandler := handler.NewKYCHandler(kycService)
-
-	// Payment Routes
+	// --- Payment Routes ---
 	paymentGroup := api.Group("/payments")
 	paymentGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
 	paymentGroup.Post("/create-order", paymentHandler.CreateOrder)
@@ -125,23 +166,33 @@ func main() {
 	paymentGroup.Post("/refund", paymentHandler.ProcessRefund)
 	paymentGroup.Get("/history", paymentHandler.GetPaymentHistory)
 	paymentGroup.Get("/:id", paymentHandler.GetPaymentDetails)
-	// Webhook is typically public
+
+	// Payment webhook (public, verified by signature)
 	api.Post("/payments/webhook", paymentHandler.HandleWebhook)
 
-	// KYC Routes (Customer)
+	// --- KYC Routes (Customer) ---
 	kycGroup := api.Group("/kyc")
 	kycGroup.Use(middleware.JWTMiddleware(cfg.JWTSecret))
 	kycGroup.Post("/", kycHandler.UploadDocuments)
 	kycGroup.Get("/", kycHandler.GetCustomerKYC)
 
-	// KYC Admin Routes
-	adminKYCGroup := adminGroup.Group("/kyc")
-	adminKYCGroup.Get("/pending", kycHandler.GetPendingKYC)
-	adminKYCGroup.Patch("/:id/approve", kycHandler.ApproveKYC)
-	adminKYCGroup.Patch("/:id/reject", kycHandler.RejectKYC)
+	// Graceful shutdown
+	go func() {
+		if err := app.Listen(":" + cfg.Port); err != nil {
+			log.Fatal().Err(err).Msg("Server failed to start")
+		}
+	}()
 
-	log.Printf("Starting server on port %s", cfg.Port)
-	if err := app.Listen(":" + cfg.Port); err != nil {
-		log.Fatalf("Error starting server: %v", err)
+	log.Info().Str("port", cfg.Port).Str("env", cfg.Env).Msg("Server started")
+
+	// Wait for interrupt signal
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Info().Msg("Shutting down server...")
+	if err := app.Shutdown(); err != nil {
+		log.Error().Err(err).Msg("Server forced shutdown")
 	}
+	log.Info().Msg("Server exited gracefully")
 }
