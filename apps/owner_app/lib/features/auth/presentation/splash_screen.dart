@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/providers.dart';
 
-class OwnerSplashScreen extends StatefulWidget {
+class OwnerSplashScreen extends ConsumerStatefulWidget {
   const OwnerSplashScreen({super.key});
 
   @override
-  State<OwnerSplashScreen> createState() => _OwnerSplashScreenState();
+  ConsumerState<OwnerSplashScreen> createState() => _OwnerSplashScreenState();
 }
 
-class _OwnerSplashScreenState extends State<OwnerSplashScreen> {
+class _OwnerSplashScreenState extends ConsumerState<OwnerSplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -16,8 +18,12 @@ class _OwnerSplashScreenState extends State<OwnerSplashScreen> {
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
+    await ref.read(ownerAuthProvider.notifier).checkAuth();
+    if (!mounted) return;
+    final authState = ref.read(ownerAuthProvider);
+    if (authState.isAuthenticated) {
+      context.go('/dashboard');
+    } else {
       context.go('/login');
     }
   }

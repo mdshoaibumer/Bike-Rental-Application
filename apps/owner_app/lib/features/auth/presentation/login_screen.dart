@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared/widgets/primary_button.dart';
+import '../../../core/providers.dart';
 
-class OwnerLoginScreen extends StatefulWidget {
+class OwnerLoginScreen extends ConsumerStatefulWidget {
   const OwnerLoginScreen({super.key});
 
   @override
-  State<OwnerLoginScreen> createState() => _OwnerLoginScreenState();
+  ConsumerState<OwnerLoginScreen> createState() => _OwnerLoginScreenState();
 }
 
-class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
+class _OwnerLoginScreenState extends ConsumerState<OwnerLoginScreen> {
   final _phoneController = TextEditingController();
   final _otpController = TextEditingController();
   bool _otpSent = false;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -22,40 +23,52 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
     super.dispose();
   }
 
-  void _handleSendOtp() async {
-    if (_phoneController.text.trim().isEmpty) {
+  Future<void> _handleSendOtp() async {
+    final mobile = _phoneController.text.trim();
+    if (mobile.isEmpty || mobile.length < 10) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a valid phone number')),
       );
       return;
     }
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 1)); // Mock Network Call
-    setState(() {
-      _isLoading = false;
-      _otpSent = true;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Verification code sent! (Mock code: 123456)')),
-    );
+    final success = await ref.read(ownerAuthProvider.notifier).sendOtp(mobile);
+    if (success && mounted) {
+      setState(() => _otpSent = true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Verification code sent!')),
+      );
+    } else if (mounted) {
+      final error = ref.read(ownerAuthProvider).error;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error ?? 'Failed to send OTP')),
+      );
+    }
   }
 
-  void _handleVerifyOtp() async {
-    if (_otpController.text.trim() != '123456') {
+  Future<void> _handleVerifyOtp() async {
+    final otp = _otpController.text.trim();
+    if (otp.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid verification code! Try 123456')),
+        const SnackBar(content: Text('Please enter 6-digit code')),
       );
       return;
     }
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 1)); // Mock login verification
-    if (mounted) {
+    final mobile = _phoneController.text.trim();
+    final success = await ref.read(ownerAuthProvider.notifier).verifyOtp(mobile, otp);
+    if (success && mounted) {
       context.go('/dashboard');
+    } else if (mounted) {
+      final error = ref.read(ownerAuthProvider).error;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error ?? 'Verification failed')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(ownerAuthProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Partner Portal Sign In'),
@@ -91,13 +104,14 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
               const SizedBox(height: 24),
               PrimaryButton(
                 text: 'Send Verification Code',
-                isLoading: _isLoading,
+                isLoading: authState.isLoading,
                 onPressed: _handleSendOtp,
               ),
             ] else ...[
               TextField(
                 controller: _otpController,
                 keyboardType: TextInputType.number,
+                maxLength: 6,
                 decoration: InputDecoration(
                   labelText: '6-Digit Verification Code',
                   prefixIcon: const Icon(Icons.lock_clock),
@@ -109,7 +123,7 @@ class _OwnerLoginScreenState extends State<OwnerLoginScreen> {
               const SizedBox(height: 24),
               PrimaryButton(
                 text: 'Verify & Login',
-                isLoading: _isLoading,
+                isLoading: authState.isLoading,
                 onPressed: _handleVerifyOtp,
               ),
               const SizedBox(height: 16),

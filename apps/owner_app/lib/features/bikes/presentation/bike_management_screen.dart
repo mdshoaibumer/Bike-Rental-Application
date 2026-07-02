@@ -1,67 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/providers.dart';
 
-class Bike {
-  final String id;
-  final String modelName;
-  final String category;
-  final double rentalPrice;
-  final double securityDeposit;
-  bool isAvailable;
-
-  Bike({
-    required this.id,
-    required this.modelName,
-    required this.category,
-    required this.rentalPrice,
-    required this.securityDeposit,
-    required this.isAvailable,
-  });
-}
-
-class BikeManagementScreen extends StatefulWidget {
+class BikeManagementScreen extends ConsumerStatefulWidget {
   const BikeManagementScreen({super.key});
 
   @override
-  State<BikeManagementScreen> createState() => _BikeManagementScreenState();
+  ConsumerState<BikeManagementScreen> createState() => _BikeManagementScreenState();
 }
 
-class _BikeManagementScreenState extends State<BikeManagementScreen> {
-  final List<Bike> _bikes = [
-    Bike(id: '1', modelName: 'Royal Enfield Classic 350', category: 'Cruiser', rentalPrice: 1200, securityDeposit: 5000, isAvailable: true),
-    Bike(id: '2', modelName: 'KTM Duke 250', category: 'Sport', rentalPrice: 1500, securityDeposit: 6000, isAvailable: true),
-    Bike(id: '3', modelName: 'Honda Activa 6G', category: 'Scooter', rentalPrice: 500, securityDeposit: 2000, isAvailable: false),
-    Bike(id: '4', modelName: 'Yamaha FZ-S V3', category: 'Street', rentalPrice: 900, securityDeposit: 4000, isAvailable: true),
-  ];
-
+class _BikeManagementScreenState extends ConsumerState<BikeManagementScreen> {
   String _searchQuery = '';
   String _selectedCategory = 'All';
 
-  void _addBike(Bike bike) {
-    setState(() {
-      _bikes.add(bike);
-    });
-  }
-
-  void _toggleAvailability(String id) {
-    setState(() {
-      final bike = _bikes.firstWhere((b) => b.id == id);
-      bike.isAvailable = !bike.isAvailable;
-    });
-  }
-
-  void _deleteBike(String id) {
-    setState(() {
-      _bikes.removeWhere((b) => b.id == id);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Bike deleted (Soft Deleted)')),
-    );
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => ref.read(ownerBikesProvider.notifier).loadBikes());
   }
 
   void _showAddBikeDialog() {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final depositController = TextEditingController();
+    final regController = TextEditingController();
     String category = 'Cruiser';
 
     showDialog(
@@ -78,6 +40,11 @@ class _BikeManagementScreenState extends State<BikeManagementScreen> {
                     TextField(
                       controller: nameController,
                       decoration: const InputDecoration(labelText: 'Model Name / Brand'),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: regController,
+                      decoration: const InputDecoration(labelText: 'Registration Number'),
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
@@ -111,19 +78,27 @@ class _BikeManagementScreenState extends State<BikeManagementScreen> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (nameController.text.isNotEmpty &&
                         priceController.text.isNotEmpty &&
-                        depositController.text.isNotEmpty) {
-                      _addBike(Bike(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        modelName: nameController.text,
-                        category: category,
-                        rentalPrice: double.parse(priceController.text),
-                        securityDeposit: double.parse(depositController.text),
-                        isAvailable: true,
-                      ));
+                        depositController.text.isNotEmpty &&
+                        regController.text.isNotEmpty) {
                       Navigator.pop(ctx);
+                      try {
+                        await ref.read(ownerBikesProvider.notifier).addBike(
+                          name: nameController.text,
+                          category: category,
+                          rentalPrice: double.parse(priceController.text),
+                          securityDeposit: double.parse(depositController.text),
+                          registrationNumber: regController.text,
+                        );
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: $e')),
+                          );
+                        }
+                      }
                     }
                   },
                   child: const Text('Add'),
@@ -138,8 +113,10 @@ class _BikeManagementScreenState extends State<BikeManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredBikes = _bikes.where((bike) {
-      final matchesSearch = bike.modelName.toLowerCase().contains(_searchQuery.toLowerCase());
+    final bikesState = ref.watch(ownerBikesProvider);
+
+    final filteredBikes = bikesState.bikes.where((bike) {
+      final matchesSearch = bike.name.toLowerCase().contains(_searchQuery.toLowerCase());
       final matchesCategory = _selectedCategory == 'All' || bike.category == _selectedCategory;
       return matchesSearch && matchesCategory;
     }).toList();
@@ -156,7 +133,6 @@ class _BikeManagementScreenState extends State<BikeManagementScreen> {
       ),
       body: Column(
         children: [
-          // Search & Filters Header
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -185,82 +161,105 @@ class _BikeManagementScreenState extends State<BikeManagementScreen> {
               ],
             ),
           ),
-
-          // Fleet List
           Expanded(
-            child: filteredBikes.isEmpty
-                ? const Center(child: Text('No bikes found matching filters.'))
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: filteredBikes.length,
-                    itemBuilder: (ctx, idx) {
-                      final bike = filteredBikes[idx];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        elevation: 1,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        bike.modelName,
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        bike.category,
-                                        style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  // Available switch status indicator badge
-                                  Switch(
-                                    value: bike.isAvailable,
-                                    onChanged: (val) => _toggleAvailability(bike.id),
-                                  )
-                                ],
-                              ),
-                              const Divider(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Daily: ₹${bike.rentalPrice.toInt()}  |  Deposit: ₹${bike.securityDeposit.toInt()}',
-                                    style: const TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit_outlined, color: Colors.blue),
-                                        onPressed: () {
-                                          // Edit logic placeholder
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Edit Bike flow initiated')),
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete_outline, color: Colors.red),
-                                        onPressed: () => _deleteBike(bike.id),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+            child: bikesState.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : bikesState.error != null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(bikesState.error!, style: const TextStyle(color: Colors.red)),
+                            const SizedBox(height: 8),
+                            ElevatedButton(
+                              onPressed: () => ref.read(ownerBikesProvider.notifier).loadBikes(),
+                              child: const Text('Retry'),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      )
+                    : filteredBikes.isEmpty
+                        ? const Center(child: Text('No bikes found matching filters.'))
+                        : RefreshIndicator(
+                            onRefresh: () => ref.read(ownerBikesProvider.notifier).loadBikes(),
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              itemCount: filteredBikes.length,
+                              itemBuilder: (ctx, idx) {
+                                final bike = filteredBikes[idx];
+                                return Card(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  elevation: 1,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    bike.name,
+                                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    bike.category ?? 'General',
+                                                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Switch(
+                                              value: bike.availabilityStatus == 'Available',
+                                              onChanged: (val) {
+                                                ref.read(ownerBikesProvider.notifier)
+                                                    .toggleAvailability(bike.id, bike.availabilityStatus);
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                        const Divider(height: 20),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Daily: ₹${bike.rentalPrice.toInt()}  |  Deposit: ₹${bike.securityDeposit.toInt()}',
+                                              style: const TextStyle(fontWeight: FontWeight.w500),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                              onPressed: () async {
+                                                final confirmed = await showDialog<bool>(
+                                                  context: context,
+                                                  builder: (c) => AlertDialog(
+                                                    title: const Text('Delete Bike'),
+                                                    content: Text('Delete ${bike.name}?'),
+                                                    actions: [
+                                                      TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
+                                                      TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+                                                    ],
+                                                  ),
+                                                );
+                                                if (confirmed == true) {
+                                                  ref.read(ownerBikesProvider.notifier).deleteBike(bike.id);
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
           ),
         ],
       ),

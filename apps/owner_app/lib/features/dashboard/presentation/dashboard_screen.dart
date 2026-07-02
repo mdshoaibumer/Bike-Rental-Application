@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/providers.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(dashboardStatsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Partner Dashboard'),
@@ -16,156 +20,118 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // User Greeting Info Header
-            const Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.indigo,
-                  child: Icon(Icons.admin_panel_settings, color: Colors.white),
-                ),
-                SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome back, Fleet Owner',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'ID: PARTNER-908',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Revenue and Primary Financial Section
-            const Text(
-              'Performance Overview',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildMetricCard(
-                    context,
-                    title: "Today's Revenue",
-                    value: "₹4,250",
-                    subtitle: "8 transactions",
-                    icon: Icons.currency_rupee,
-                    color: Colors.emerald,
+      body: statsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text('Error: $err')),
+        data: (stats) => SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.indigo,
+                    child: Icon(Icons.admin_panel_settings, color: Colors.white),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildMetricCard(
-                    context,
-                    title: "Monthly Revenue",
-                    value: "₹1,24,500",
-                    subtitle: "+12% vs last month",
-                    icon: Icons.analytics_outlined,
-                    color: Colors.blueAccent,
+                  SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome back, Fleet Owner',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Bike and Booking Status Counts
-            const Text(
-              'Real-time Operations',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.4,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              children: [
-                _buildOperationCard(
-                  title: 'Total Fleet',
-                  value: '24 Bikes',
-                  icon: Icons.motorcycle,
-                  color: Colors.indigo,
-                  description: 'All managed listings',
-                ),
-                _buildOperationCard(
-                  title: 'Available Now',
-                  value: '18 Bikes',
-                  icon: Icons.check_circle_outline,
-                  color: Colors.teal,
-                  description: 'Ready to rent',
-                ),
-                _buildOperationCard(
-                  title: 'Active Rentals',
-                  value: '5 Active',
-                  icon: Icons.pedal_bike,
-                  color: Colors.orange,
-                  description: 'Out on rides',
-                ),
-                _buildOperationCard(
-                  title: 'Pending Approvals',
-                  value: '2 Bookings',
-                  icon: Icons.pending_actions_outlined,
-                  color: Colors.redAccent,
-                  description: 'Need action',
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Quick Actions Section
-            const Text(
-              'Quick Fleet Operations',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _buildQuickActionBtn(
-                  context,
-                  label: 'Manage Bikes',
-                  icon: Icons.motorcycle,
-                  route: '/bikes',
-                  color: Colors.indigo,
-                ),
-                _buildQuickActionBtn(
-                  context,
-                  label: 'Manage Bookings',
-                  icon: Icons.assignment_turned_in_outlined,
-                  route: '/bookings',
-                  color: Colors.deepOrange,
-                ),
-                _buildQuickActionBtn(
-                  context,
-                  label: 'KYC & Customers',
-                  icon: Icons.verified_user_outlined,
-                  route: '/customers',
-                  color: Colors.teal,
-                ),
-                _buildQuickActionBtn(
-                  context,
-                  label: 'Settings',
-                  icon: Icons.settings_outlined,
-                  route: '/settings',
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Performance Overview',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildMetricCard(
+                      context,
+                      title: "Today's Revenue",
+                      value: '₹${stats.todayRevenue.toStringAsFixed(0)}',
+                      icon: Icons.currency_rupee,
+                      color: Colors.green,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildMetricCard(
+                      context,
+                      title: "Monthly Revenue",
+                      value: '₹${stats.monthlyRevenue.toStringAsFixed(0)}',
+                      icon: Icons.analytics_outlined,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Real-time Operations',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.4,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                children: [
+                  _buildOperationCard(
+                    title: 'Total Fleet',
+                    value: '${stats.totalBikes} Bikes',
+                    icon: Icons.motorcycle,
+                    color: Colors.indigo,
+                  ),
+                  _buildOperationCard(
+                    title: 'Available Now',
+                    value: '${stats.availableBikes} Bikes',
+                    icon: Icons.check_circle_outline,
+                    color: Colors.teal,
+                  ),
+                  _buildOperationCard(
+                    title: 'Active Rentals',
+                    value: '${stats.activeRentals} Active',
+                    icon: Icons.pedal_bike,
+                    color: Colors.orange,
+                  ),
+                  _buildOperationCard(
+                    title: 'Pending Approvals',
+                    value: '${stats.pendingBookings} Bookings',
+                    icon: Icons.pending_actions_outlined,
+                    color: Colors.redAccent,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Quick Fleet Operations',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  _buildQuickActionBtn(context, label: 'Manage Bikes', icon: Icons.motorcycle, route: '/bikes', color: Colors.indigo),
+                  _buildQuickActionBtn(context, label: 'Manage Bookings', icon: Icons.assignment_turned_in_outlined, route: '/bookings', color: Colors.deepOrange),
+                  _buildQuickActionBtn(context, label: 'KYC & Customers', icon: Icons.verified_user_outlined, route: '/customers', color: Colors.teal),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -190,42 +156,26 @@ class DashboardScreen extends StatelessWidget {
     BuildContext context, {
     required String title,
     required String value,
-    required String subtitle,
     required IconData icon,
     required Color color,
   }) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border(left: BorderSide(color: color, width: 6)),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey),
-                ),
+                Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 Icon(icon, size: 18, color: color),
               ],
             ),
             const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-            ),
+            Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -237,7 +187,6 @@ class DashboardScreen extends StatelessWidget {
     required String value,
     required IconData icon,
     required Color color,
-    required String description,
   }) {
     return Card(
       elevation: 1,
@@ -250,19 +199,8 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 28),
             const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              description,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-            ),
+            Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(title, style: const TextStyle(fontSize: 12, color: Colors.black87)),
           ],
         ),
       ),
