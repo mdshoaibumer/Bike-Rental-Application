@@ -1,21 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Bike Rental Application
 
-# Run and deploy your AI Studio app
+An Enterprise-grade Bike Rental Platform featuring a dual-portal Customer app and Owner/Admin management console.
 
-This contains everything you need to run your app locally.
+## Architecture
 
-View your app in AI Studio: https://ai.studio/apps/ea72c72e-1196-48c7-a2a6-57c577a8640c
+This project is built using a modern, scalable architecture:
 
-## Run Locally
+*   **Backend System**: Written in **Go** following a clean architecture pattern (`backend/internal/...`). It includes structured domains, handlers, repositories, and services for entities like bikes, bookings, KYC, notifications, and payments.
+*   **Mobile Applications**:
+    *   **Native Android App**: Located in the `app/` directory, built with Kotlin and Jetpack Compose.
+    *   **Flutter Customer App**: Located in `apps/customer_app/`, designed with modular features.
+    *   **Flutter Owner App**: Located in `apps/owner_app/`, which includes management features for bikes, bookings, customers, and a dashboard.
+*   **Shared Libraries**: A `shared/` Flutter package containing reusable networking, storage, theming, and UI widget components.
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+## Documentation
 
+Extensive documentation is available in the `docs/` folder:
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+*   [API Documentation](docs/API_DOCUMENTATION.md)
+*   [Architecture](docs/ARCHITECTURE.md)
+*   [Database ERD](docs/DATABASE_ERD.md)
+*   [Deployment Guide](docs/DEPLOYMENT_GUIDE.md)
+
+## Setup and Installation
+
+Please refer to the [Installation Guide](docs/INSTALLATION_GUIDE.md) for detailed instructions on setting up the backend and mobile applications locally.

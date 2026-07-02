@@ -1,6 +1,0 @@
-{
-  "name": "Bike Rental",
-  "description": "Enterprise-grade Bike Rental Platform featuring a dual-portal Customer app and Owner/Admin management console.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
