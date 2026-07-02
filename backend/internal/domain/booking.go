@@ -11,28 +11,29 @@ const (
 	BookingStatusRejected  = "REJECTED"
 	BookingStatusCancelled = "CANCELLED"
 	BookingStatusActive    = "ACTIVE"
+	BookingStatusReturned  = "RETURNED"
 	BookingStatusCompleted = "COMPLETED"
 	BookingStatusExpired   = "EXPIRED"
 )
 
 type Booking struct {
-	ID             string    `json:"id"`
-	BookingNumber  string    `json:"booking_number"`
-	CustomerID     string    `json:"customer_id"`
-	BikeID         string    `json:"bike_id"`
-	PickupDate     time.Time `json:"pickup_date"`
-	ReturnDate     time.Time `json:"return_date"`
-	DurationDays   int       `json:"duration_days"`
-	Price          float64   `json:"price"`
-	Deposit        float64   `json:"deposit"`
-	Taxes          float64   `json:"taxes"`
-	Discount       float64   `json:"discount"`
-	FinalAmount    float64   `json:"final_amount"`
-	BookingStatus  string    `json:"booking_status"`
-	PaymentStatus  string    `json:"payment_status"` // PENDING, PAID, REFUNDED
-	CouponID       string    `json:"coupon_id,omitempty"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
+	ID            string    `json:"id"`
+	BookingNumber string    `json:"booking_number"`
+	CustomerID    string    `json:"customer_id"`
+	BikeID        string    `json:"bike_id"`
+	PickupDate    time.Time `json:"pickup_date"`
+	ReturnDate    time.Time `json:"return_date"`
+	DurationDays  int       `json:"duration_days"`
+	Price         float64   `json:"price"`
+	Deposit       float64   `json:"deposit"`
+	Taxes         float64   `json:"taxes"`
+	Discount      float64   `json:"discount"`
+	FinalAmount   float64   `json:"final_amount"`
+	BookingStatus string    `json:"booking_status"`
+	PaymentStatus string    `json:"payment_status"` // PENDING, PAID, REFUNDED
+	CouponID      string    `json:"coupon_id,omitempty"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 
 	// Timeline
 	ApprovedAt  *time.Time `json:"approved_at,omitempty"`

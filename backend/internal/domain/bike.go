@@ -5,26 +5,27 @@ import (
 )
 
 type Bike struct {
-	ID                  string      `json:"id"`
-	BikeName            string      `json:"bike_name"`
-	Brand               string      `json:"brand"`
-	Model               string      `json:"model"`
-	EngineCC            int         `json:"engine_cc"`
-	RegistrationNumber  string      `json:"registration_number"`
-	FuelType            string      `json:"fuel_type"`
-	Transmission        string      `json:"transmission"`
-	Mileage             float64     `json:"mileage"`
-	Color               string      `json:"color"`
-	Description         string      `json:"description"`
-	RentalPrice         float64     `json:"rental_price"`
-	SecurityDeposit     float64     `json:"security_deposit"`
-	AvailabilityStatus  string      `json:"availability_status"`
-	InsuranceExpiry     time.Time   `json:"insurance_expiry"`
-	CurrentOdometer     int         `json:"current_odometer"`
-	CategoryID          string      `json:"category_id"`
-	Images              []BikeImage `json:"images"`
-	CreatedAt           time.Time   `json:"created_at"`
-	UpdatedAt           time.Time   `json:"updated_at"`
+	ID                 string      `json:"id"`
+	BikeName           string      `json:"bike_name"`
+	Brand              string      `json:"brand"`
+	Model              string      `json:"model"`
+	EngineCC           int         `json:"engine_cc"`
+	RegistrationNumber string      `json:"registration_number"`
+	FuelType           string      `json:"fuel_type"`
+	Transmission       string      `json:"transmission"`
+	Mileage            float64     `json:"mileage"`
+	Color              string      `json:"color"`
+	Description        string      `json:"description"`
+	RentalPrice        float64     `json:"rental_price"`
+	SecurityDeposit    float64     `json:"security_deposit"`
+	AvailabilityStatus string      `json:"availability_status"`
+	InsuranceExpiry    time.Time   `json:"insurance_expiry"`
+	CurrentOdometer    int         `json:"current_odometer"`
+	CategoryID         string      `json:"category_id"`
+	OwnerID            string      `json:"owner_id"`
+	Images             []BikeImage `json:"images,omitempty"`
+	CreatedAt          time.Time   `json:"created_at"`
+	UpdatedAt          time.Time   `json:"updated_at"`
 }
 
 type BikeCategory struct {

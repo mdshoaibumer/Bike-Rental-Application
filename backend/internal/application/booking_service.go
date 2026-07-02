@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"bike-rental/internal/domain"
+
 	"github.com/google/uuid"
 )
 
@@ -135,14 +136,14 @@ func (s *bookingService) MarkPickedUp(id string) error {
 }
 
 func (s *bookingService) MarkReturned(id string) error {
-	return s.updateStatus(id, domain.BookingStatusActive, domain.BookingStatusPending, func(b *domain.Booking, t time.Time) {
+	return s.updateStatus(id, domain.BookingStatusActive, domain.BookingStatusReturned, func(b *domain.Booking, t time.Time) {
 		b.ReturnedAt = &t
 	})
 }
 
 func (s *bookingService) CompleteBooking(id string) error {
-	// Typically completed after returned and payment/deposit settled
-	return s.updateStatus(id, domain.BookingStatusPending, domain.BookingStatusCompleted, func(b *domain.Booking, t time.Time) {
+	// Completed after bike is returned and deposit/payment is settled
+	return s.updateStatus(id, domain.BookingStatusReturned, domain.BookingStatusCompleted, func(b *domain.Booking, t time.Time) {
 		b.CompletedAt = &t
 	})
 }
