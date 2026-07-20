@@ -23,13 +23,18 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
     final bookingsState = ref.watch(bookingsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Bookings')),
+      appBar: AppBar(
+        title: const Text('My Bookings'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 8,
+      ),
       body: bookingsState.isLoading && bookingsState.bookings.isEmpty
           ? ListView.separated(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               itemCount: 4,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) => const ShimmerLoader(width: double.infinity, height: 120),
+              itemBuilder: (context, index) => const ShimmerLoader(width: double.infinity, height: 140),
             )
           : bookingsState.error != null
               ? EmptyStateWidget(
@@ -48,60 +53,100 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                   : RefreshIndicator(
                       onRefresh: () => ref.read(bookingsProvider.notifier).loadBookings(),
                       child: ListView.separated(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                         itemCount: bookingsState.bookings.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final booking = bookingsState.bookings[index];
-                          return Card(
-                            shape: RoundedRectangleBorder(
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
                               borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(
-                                color: Theme.of(context).colorScheme.surfaceVariant,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                    width: 1,
+                                  ),
+                                  color: Theme.of(context).colorScheme.surface,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.03),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Booking #${booking.bookingNumber}',
-                                        style: Theme.of(context).textTheme.titleMedium,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Booking #${booking.bookingNumber}',
+                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          _buildStatusChip(booking.bookingStatus),
+                                        ],
                                       ),
-                                      _buildStatusChip(booking.bookingStatus),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Amount',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  letterSpacing: 0.3,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                              Text(
+                                                '₹${booking.finalAmount.toInt()}',
+                                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Duration',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  letterSpacing: 0.3,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                              Text(
+                                                '${booking.durationDays} Days',
+                                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('Amount', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-                                          Text(
-                                            '₹${booking.finalAmount.toInt()}',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text('Duration', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-                                          Text(
-                                            '${booking.durationDays} Days',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                ),
                               ),
                             ),
                           );

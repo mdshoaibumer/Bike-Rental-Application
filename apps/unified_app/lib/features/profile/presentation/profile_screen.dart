@@ -135,7 +135,7 @@ class ProfileScreen extends ConsumerWidget {
           // Stats Row
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
               child: Row(
                 children: [
                   Expanded(
@@ -171,7 +171,7 @@ class ProfileScreen extends ConsumerWidget {
           // About Section
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -179,6 +179,7 @@ class ProfileScreen extends ConsumerWidget {
                     'Account',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.2,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -215,7 +216,7 @@ class ProfileScreen extends ConsumerWidget {
           // Activity Section
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -223,6 +224,7 @@ class ProfileScreen extends ConsumerWidget {
                     'Activity',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.2,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -250,7 +252,7 @@ class ProfileScreen extends ConsumerWidget {
           // Support Section
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -258,6 +260,7 @@ class ProfileScreen extends ConsumerWidget {
                     'Help',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.2,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -294,7 +297,7 @@ class ProfileScreen extends ConsumerWidget {
           // Logout Button
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -304,6 +307,8 @@ class ProfileScreen extends ConsumerWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
+                    elevation: 4,
+                    shadowColor: Colors.red.withOpacity(0.4),
                   ),
                   onPressed: () => _showLogoutDialog(context, ref),
                   child: Row(
@@ -315,6 +320,7 @@ class ProfileScreen extends ConsumerWidget {
                         'Logout',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -323,7 +329,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 20)),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
         ],
       ),
     );
@@ -374,20 +380,20 @@ class ProfileScreen extends ConsumerWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme._primaryBlue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppTheme._primaryBlue.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: AppTheme._primaryBlue, size: 20),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,20 +402,26 @@ class ProfileScreen extends ConsumerWidget {
                       title,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w600,
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppTheme._textSecondary,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 12),
-              trailing,
+              DefaultTextStyle(
+                style: TextStyle(color: AppTheme._textSecondary),
+                child: trailing,
+              ),
             ],
           ),
         ),
@@ -419,37 +431,54 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildKYCBadge(String status) {
     Color color;
+    IconData icon;
     String label;
     switch (status.toUpperCase()) {
       case 'APPROVED':
         color = AppTheme._successGreen;
-        label = 'Done';
+        icon = Icons.check_circle_rounded;
+        label = 'Verified';
         break;
       case 'PENDING':
         color = AppTheme._warningAmber;
+        icon = Icons.schedule_rounded;
         label = 'Pending';
         break;
       case 'REJECTED':
         color = AppTheme._errorRed;
+        icon = Icons.cancel_rounded;
         label = 'Failed';
         break;
       default:
         color = AppTheme._textSecondary;
+        icon = Icons.help_outline_rounded;
         label = 'Unknown';
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+          width: 1,
         ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
       ),
     );
   }
