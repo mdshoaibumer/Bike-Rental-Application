@@ -184,6 +184,28 @@ class MockData {
     }
   ];
 
+  static void initializeImages() {
+    for (var bike in bikes) {
+      if (!bike.containsKey('imageUrl')) {
+        switch (bike['category']) {
+          case 'Cruiser':
+            bike['imageUrl'] = 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000&auto=format&fit=crop';
+            break;
+          case 'Sport':
+            bike['imageUrl'] = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=1000&auto=format&fit=crop';
+            break;
+          case 'Scooter':
+            bike['imageUrl'] = 'https://images.unsplash.com/photo-1620610312674-89c02db2cbbe?q=80&w=1000&auto=format&fit=crop';
+            break;
+          case 'Street':
+          default:
+            bike['imageUrl'] = 'https://images.unsplash.com/photo-1558980663-3685c1d673c4?q=80&w=1000&auto=format&fit=crop';
+            break;
+        }
+      }
+    }
+  }
+
   static final List<Map<String, dynamic>> customers = List.generate(60, (index) {
     final firstNames = ['Amit', 'Rahul', 'Priya', 'Sneha', 'Vikram', 'Neha', 'Rohan', 'Aditi', 'Karan', 'Pooja', 'Suresh', 'Deepa'];
     final lastNames = ['Sharma', 'Verma', 'Patel', 'Singh', 'Kumar', 'Gupta', 'Iyer', 'Reddy', 'Das', 'Joshi'];

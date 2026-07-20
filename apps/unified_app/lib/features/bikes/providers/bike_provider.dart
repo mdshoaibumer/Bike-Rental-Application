@@ -122,10 +122,12 @@ class BikesNotifier extends StateNotifier<BikesState> {
       List<Bike> bikes = data.map((json) => Bike.fromJson(json)).toList();
       
       if (bikes.isEmpty) {
+        MockData.initializeImages();
         bikes = MockData.bikes.map((json) => Bike.fromJson(json)).toList();
       }
       state = state.copyWith(bikes: bikes, isLoading: false);
     } catch (e) {
+      MockData.initializeImages();
       final bikes = MockData.bikes.map((json) => Bike.fromJson(json)).toList();
       state = state.copyWith(bikes: bikes, isLoading: false, error: 'Using offline demo data');
     }
@@ -139,12 +141,14 @@ class BikesNotifier extends StateNotifier<BikesState> {
       List<Bike> bikes = data.map((json) => Bike.fromJson(json)).toList();
       
       if (bikes.isEmpty) {
+        MockData.initializeImages();
         bikes = MockData.bikes
             .where((b) => b['bike_name'].toString().toLowerCase().contains(query.toLowerCase()))
             .map((json) => Bike.fromJson(json)).toList();
       }
       state = state.copyWith(bikes: bikes, isLoading: false);
     } catch (e) {
+      MockData.initializeImages();
       final bikes = MockData.bikes
           .where((b) => b['bike_name'].toString().toLowerCase().contains(query.toLowerCase()))
           .map((json) => Bike.fromJson(json)).toList();
@@ -174,6 +178,7 @@ final bikeDetailProvider = FutureProvider.family<Bike?, String>((ref, bikeId) as
     return Bike.fromJson(response.data);
   } catch (_) {
     try {
+      MockData.initializeImages();
       final mock = MockData.bikes.firstWhere((b) => b['id'] == bikeId);
       return Bike.fromJson(mock);
     } catch (_) {
