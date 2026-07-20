@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../theme/app_theme.dart';
 
 class PremiumNavigationBar extends StatefulWidget {
@@ -67,7 +68,7 @@ class _PremiumNavigationBarState extends State<PremiumNavigationBar>
             (isDark ? const Color(0xFF1E1E1E) : Colors.white),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
             blurRadius: widget.elevation,
             offset: const Offset(0, -2),
           )

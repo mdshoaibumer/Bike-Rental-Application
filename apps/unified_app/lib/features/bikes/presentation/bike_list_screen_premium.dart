@@ -5,7 +5,6 @@ import 'package:shared/widgets/premium_app_bar.dart';
 import 'package:shared/widgets/shimmer_loader.dart';
 import 'package:shared/widgets/premium_bike_card.dart';
 import 'package:shared/widgets/empty_state_widget.dart';
-import 'package:shared/widgets/floating_filter_button.dart';
 import 'package:shared/theme/app_theme.dart';
 import '../providers/bike_provider.dart';
 
@@ -182,16 +181,16 @@ class _BikeListScreenPremiumState extends ConsumerState<BikeListScreenPremium>
         itemBuilder: (context, index) {
           final bike = state.bikes[index];
           return PremiumBikeCard(
-            id: bike.id ?? '',
-            name: bike.name,
-            brand: bike.brand ?? '',
-            price: bike.pricePerDay.toDouble(),
-            imageUrl: bike.image,
+            id: bike.id,
+            name: bike.bikeName,
+            brand: bike.brand,
+            price: bike.rentalPrice,
+            imageUrl: bike.imageUrl,
             category: bike.category ?? 'Standard',
-            status: bike.status ?? 'Available',
-            rating: bike.rating?.toDouble(),
-            reviewCount: bike.reviewCount,
-            onTap: () => context.push('/bikes/${bike.id}'),
+            status: bike.availabilityStatus,
+            rating: 4.8,
+            reviewCount: 124,
+            onTap: () => context.push('/bike/${bike.id}'),
           );
         },
       ),

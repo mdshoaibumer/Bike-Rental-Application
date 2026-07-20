@@ -197,8 +197,8 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        iconTheme: const IconThemeData(color: textPrimary),
-        titleTextStyle: const TextStyle(
+        iconTheme: IconThemeData(color: textPrimary),
+        titleTextStyle: TextStyle(
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -332,8 +332,8 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        iconTheme: const IconThemeData(color: textPrimaryDark),
-        titleTextStyle: const TextStyle(
+        iconTheme: IconThemeData(color: textPrimaryDark),
+        titleTextStyle: TextStyle(
           color: textPrimaryDark,
           fontSize: 20,
           fontWeight: FontWeight.w600,

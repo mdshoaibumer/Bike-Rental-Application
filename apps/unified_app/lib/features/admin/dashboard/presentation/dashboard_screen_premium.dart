@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared/widgets/premium_app_bar.dart';
-import 'package:shared/widgets/glass_morphism_container.dart';
 import 'package:shared/widgets/stat_card.dart';
-import 'package:shared/theme/app_theme.dart';
 import 'package:shared/widgets/empty_state_widget.dart';
 import 'package:shared/widgets/shimmer_loader.dart';
+import 'package:shared/theme/app_theme.dart';
 import '../../../../core/admin_providers.dart';
 
 class DashboardScreenPremium extends ConsumerWidget {
@@ -26,9 +24,10 @@ class DashboardScreenPremium extends ConsumerWidget {
             pinned: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
+            automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: BoxDecoration(gradient: AppTheme.primaryGradient),
+                decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
                 child: SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -134,21 +133,23 @@ class DashboardScreenPremium extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: StatCard(
-                            label: 'Total Revenue',
-                            value: '₹${stats.totalRevenue.toStringAsFixed(0)}',
+                            label: 'Monthly Revenue',
+                            value: '₹${_formatAmount(stats.monthlyRevenue)}',
                             icon: Icons.trending_up_rounded,
-                            color: AppTheme.successGreen,
-                            subValue: '+12% this month',
+                            iconColor: AppTheme.successGreen,
+                            subtitle: '₹${stats.todayRevenue.toStringAsFixed(0)} today',
+                            gradient: AppTheme.successGradient,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: StatCard(
-                            label: 'Active Bikes',
-                            value: '${stats.activeBikes}',
+                            label: 'Fleet Size',
+                            value: '${stats.availableBikes}',
                             icon: Icons.two_wheeler_rounded,
-                            color: AppTheme.primaryBlue,
-                            subValue: '${stats.totalBikes} total',
+                            iconColor: AppTheme.primaryBlue,
+                            subtitle: '${stats.totalBikes} total bikes',
+                            gradient: AppTheme.primaryGradient,
                           ),
                         ),
                       ],
@@ -158,21 +159,22 @@ class DashboardScreenPremium extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: StatCard(
-                            label: 'Today\'s Bookings',
-                            value: '${stats.todayBookings}',
+                            label: 'Active Rentals',
+                            value: '${stats.activeRentals}',
                             icon: Icons.calendar_today_rounded,
-                            color: AppTheme.accentOrange,
-                            subValue: '${stats.totalBookings} total',
+                            iconColor: AppTheme.accentOrange,
+                            subtitle: 'Currently on road',
+                            gradient: AppTheme.accentGradient,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: StatCard(
-                            label: 'Avg Rating',
-                            value: '${stats.averageRating.toStringAsFixed(1)}',
-                            icon: Icons.star_rounded,
-                            color: AppTheme.warningAmber,
-                            subValue: 'from ${stats.totalReviews} reviews',
+                            label: 'Pending',
+                            value: '${stats.pendingBookings}',
+                            icon: Icons.pending_actions_rounded,
+                            iconColor: AppTheme.warningAmber,
+                            subtitle: 'Needs approval',
                           ),
                         ),
                       ],
@@ -200,33 +202,33 @@ class DashboardScreenPremium extends ConsumerWidget {
                           context,
                           icon: Icons.two_wheeler_rounded,
                           title: 'Manage Bikes',
-                          subtitle: 'Add, edit, or remove bikes',
-                          color: AppTheme.primaryBlue,
+                          subtitle: 'Add, edit, or remove',
+                          cardColor: AppTheme.primaryBlue,
                           onTap: () => context.push('/admin/bikes'),
                         ),
                         _buildManagementCard(
                           context,
                           icon: Icons.calendar_month_rounded,
-                          title: 'View Bookings',
-                          subtitle: 'Track all reservations',
-                          color: AppTheme.accentOrange,
+                          title: 'Reservations',
+                          subtitle: 'Track all bookings',
+                          cardColor: AppTheme.accentOrange,
                           onTap: () => context.push('/admin/bookings'),
                         ),
                         _buildManagementCard(
                           context,
                           icon: Icons.people_rounded,
                           title: 'Customers',
-                          subtitle: 'Manage customer data',
-                          color: AppTheme.successGreen,
+                          subtitle: 'KYC & user data',
+                          cardColor: AppTheme.successGreen,
                           onTap: () => context.push('/admin/customers'),
                         ),
                         _buildManagementCard(
                           context,
-                          icon: Icons.assessment_rounded,
-                          title: 'Reports',
-                          subtitle: 'Analytics & insights',
-                          color: AppTheme.warningAmber,
-                          onTap: () => context.push('/admin/reports'),
+                          icon: Icons.settings_rounded,
+                          title: 'Settings',
+                          subtitle: 'Preferences & config',
+                          cardColor: AppTheme.warningAmber,
+                          onTap: () => context.push('/admin/settings'),
                         ),
                       ],
                     ),
@@ -253,12 +255,19 @@ class DashboardScreenPremium extends ConsumerWidget {
     );
   }
 
+  String _formatAmount(double amount) {
+    if (amount >= 100000) {
+      return '${(amount / 1000).toStringAsFixed(0)}K';
+    }
+    return amount.toStringAsFixed(0);
+  }
+
   Widget _buildManagementCard(
     BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
-    required Color color,
+    required Color cardColor,
     required VoidCallback onTap,
   }) {
     return Material(
@@ -268,10 +277,10 @@ class DashboardScreenPremium extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: cardColor.withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: color.withOpacity(0.2),
+              color: cardColor.withOpacity(0.2),
               width: 1.5,
             ),
           ),
@@ -282,11 +291,11 @@ class DashboardScreenPremium extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: cardColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: const EdgeInsets.all(10),
-                child: Icon(icon, color: color, size: 24),
+                child: Icon(icon, color: cardColor, size: 24),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +304,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                     title,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: color,
+                      color: cardColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -317,8 +326,9 @@ class DashboardScreenPremium extends ConsumerWidget {
   Widget _buildActivityTimeline(BuildContext context) {
     final activities = [
       ('2 min ago', 'New booking from Rajesh Kumar', Icons.check_circle_rounded),
-      ('1 hour ago', 'Bike maintenance completed - ID: BK-002', Icons.build_rounded),
-      ('3 hours ago', 'Payment received - ₹480', Icons.payment_rounded),
+      ('1 hour ago', 'Bike maintenance completed - KA-01-HH-1234', Icons.build_rounded),
+      ('3 hours ago', 'Payment received - ₹4,800', Icons.payment_rounded),
+      ('5 hours ago', 'KYC verified - Amit Sharma', Icons.verified_user_rounded),
     ];
 
     return Column(

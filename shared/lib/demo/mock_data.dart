@@ -5,201 +5,341 @@ class MockData {
     {
       'id': 'bike_1',
       'bike_name': 'Royal Enfield Classic 350',
+      'brand': 'Royal Enfield',
+      'model': 'Classic 350',
       'category': 'Cruiser',
       'rental_price': 1200.0,
       'security_deposit': 3000.0,
       'availability_status': 'Available',
-      'registration_number': 'KA-01-HH-1234'
+      'registration_number': 'KA-01-HH-1234',
+      'description': 'Iconic cruiser with timeless design and thumping exhaust note.',
+      'color': 'Stealth Black',
+      'engine_cc': 349,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_2',
       'bike_name': 'Bajaj Pulsar NS200',
+      'brand': 'Bajaj',
+      'model': 'Pulsar NS200',
       'category': 'Sport',
       'rental_price': 800.0,
       'security_deposit': 2000.0,
       'availability_status': 'Available',
-      'registration_number': 'MH-12-AB-9876'
+      'registration_number': 'MH-12-AB-9876',
+      'description': 'Aggressive naked sport bike with liquid-cooled engine.',
+      'color': 'Satin Pearl White',
+      'engine_cc': 199,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_3',
       'bike_name': 'Honda Activa 6G',
+      'brand': 'Honda',
+      'model': 'Activa 6G',
       'category': 'Scooter',
       'rental_price': 400.0,
       'security_deposit': 1000.0,
       'availability_status': 'Maintenance',
-      'registration_number': 'DL-04-CD-5678'
+      'registration_number': 'DL-04-CD-5678',
+      'description': 'India\'s best-selling automatic scooter. Perfect for city commutes.',
+      'color': 'Pearl Precious White',
+      'engine_cc': 109,
+      'fuel_type': 'Petrol',
+      'transmission': 'Automatic',
     },
     {
       'id': 'bike_4',
       'bike_name': 'KTM Duke 390',
+      'brand': 'KTM',
+      'model': 'Duke 390',
       'category': 'Sport',
       'rental_price': 1500.0,
       'security_deposit': 5000.0,
       'availability_status': 'Available',
-      'registration_number': 'TN-09-XY-3456'
+      'registration_number': 'TN-09-XY-3456',
+      'description': 'High-performance naked streetfighter with aggressive styling.',
+      'color': 'Orange',
+      'engine_cc': 373,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_5',
       'bike_name': 'TVS Apache RTR 160',
+      'brand': 'TVS',
+      'model': 'Apache RTR 160 4V',
       'category': 'Street',
       'rental_price': 700.0,
       'security_deposit': 1500.0,
       'availability_status': 'On Rent',
-      'registration_number': 'UP-16-YZ-7890'
+      'registration_number': 'UP-16-YZ-7890',
+      'description': 'Race-inspired street bike with advanced technology.',
+      'color': 'Matte Blue',
+      'engine_cc': 159,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_6',
       'bike_name': 'Yamaha R15 V4',
+      'brand': 'Yamaha',
+      'model': 'YZF-R15 V4',
       'category': 'Sport',
       'rental_price': 1000.0,
       'security_deposit': 2500.0,
       'availability_status': 'Available',
-      'registration_number': 'TS-07-EA-1122'
+      'registration_number': 'TS-07-EA-1122',
+      'description': 'Supersport with delta-box frame and Variable Valve Actuation.',
+      'color': 'Racing Blue',
+      'engine_cc': 155,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_7',
       'bike_name': 'Suzuki Access 125',
+      'brand': 'Suzuki',
+      'model': 'Access 125',
       'category': 'Scooter',
       'rental_price': 450.0,
       'security_deposit': 1000.0,
       'availability_status': 'Available',
-      'registration_number': 'WB-02-PQ-3344'
+      'registration_number': 'WB-02-PQ-3344',
+      'description': 'Refined 125cc scooter ideal for comfortable daily rides.',
+      'color': 'Pearl Mirage White',
+      'engine_cc': 124,
+      'fuel_type': 'Petrol',
+      'transmission': 'Automatic',
     },
     {
       'id': 'bike_8',
       'bike_name': 'Hero Splendor Plus',
+      'brand': 'Hero',
+      'model': 'Splendor Plus',
       'category': 'Street',
       'rental_price': 300.0,
       'security_deposit': 500.0,
       'availability_status': 'On Rent',
-      'registration_number': 'RJ-14-MN-5566'
+      'registration_number': 'RJ-14-MN-5566',
+      'description': 'India\'s most popular commuter bike. Fuel efficient and reliable.',
+      'color': 'Black Silver',
+      'engine_cc': 97,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_9',
       'bike_name': 'Royal Enfield Himalayan',
+      'brand': 'Royal Enfield',
+      'model': 'Himalayan 411',
       'category': 'Cruiser',
       'rental_price': 1400.0,
       'security_deposit': 4000.0,
       'availability_status': 'Available',
-      'registration_number': 'CH-01-AB-7788'
+      'registration_number': 'CH-01-AB-7788',
+      'description': 'Purpose-built adventure tourer for highways and trails.',
+      'color': 'Granite Black',
+      'engine_cc': 411,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_10',
       'bike_name': 'Ather 450X',
+      'brand': 'Ather',
+      'model': '450X Gen 3',
       'category': 'Scooter',
       'rental_price': 600.0,
       'security_deposit': 2000.0,
       'availability_status': 'Available',
-      'registration_number': 'KA-03-TR-9900'
+      'registration_number': 'KA-03-TR-9900',
+      'description': 'Premium electric scooter with smart connectivity.',
+      'color': 'Space Grey',
+      'engine_cc': 0,
+      'fuel_type': 'Electric',
+      'transmission': 'Automatic',
     },
     {
       'id': 'bike_11',
       'bike_name': 'Honda CB350 Hness',
+      'brand': 'Honda',
+      'model': 'CB350 H\'ness',
       'category': 'Cruiser',
       'rental_price': 1300.0,
       'security_deposit': 3500.0,
       'availability_status': 'Available',
-      'registration_number': 'MH-14-LK-2233'
+      'registration_number': 'MH-14-LK-2233',
+      'description': 'Elegant retro cruiser with Honda\'s refined engineering.',
+      'color': 'Pearl Night Star Black',
+      'engine_cc': 348,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_12',
       'bike_name': 'Bajaj Dominar 400',
+      'brand': 'Bajaj',
+      'model': 'Dominar 400',
       'category': 'Sport',
       'rental_price': 1200.0,
       'security_deposit': 3000.0,
       'availability_status': 'Maintenance',
-      'registration_number': 'GJ-05-HG-4455'
+      'registration_number': 'GJ-05-HG-4455',
+      'description': 'Power cruiser with touring capabilities and twin-barrel exhaust.',
+      'color': 'Aurora Green',
+      'engine_cc': 373,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_13',
       'bike_name': 'Ola S1 Pro',
+      'brand': 'Ola Electric',
+      'model': 'S1 Pro',
       'category': 'Scooter',
       'rental_price': 550.0,
       'security_deposit': 1500.0,
       'availability_status': 'Available',
-      'registration_number': 'KA-51-EF-6677'
+      'registration_number': 'KA-51-EF-6677',
+      'description': 'Feature-rich electric scooter with premium build and MoveOS.',
+      'color': 'Jet Black',
+      'engine_cc': 0,
+      'fuel_type': 'Electric',
+      'transmission': 'Automatic',
     },
     {
       'id': 'bike_14',
       'bike_name': 'TVS NTORQ 125',
+      'brand': 'TVS',
+      'model': 'NTORQ 125',
       'category': 'Scooter',
       'rental_price': 450.0,
       'security_deposit': 1000.0,
       'availability_status': 'Available',
-      'registration_number': 'KL-07-ZX-8899'
+      'registration_number': 'KL-07-ZX-8899',
+      'description': 'Sporty 125cc scooter with SmartXconnect Bluetooth tech.',
+      'color': 'Metallic Red',
+      'engine_cc': 124,
+      'fuel_type': 'Petrol',
+      'transmission': 'Automatic',
     },
     {
       'id': 'bike_15',
       'bike_name': 'KTM RC 200',
+      'brand': 'KTM',
+      'model': 'RC 200',
       'category': 'Sport',
       'rental_price': 1100.0,
       'security_deposit': 2500.0,
       'availability_status': 'On Rent',
-      'registration_number': 'AP-09-CV-1122'
+      'registration_number': 'AP-09-CV-1122',
+      'description': 'Faired sport bike with sharp handling and lightweight chassis.',
+      'color': 'Dark Silver Metallic',
+      'engine_cc': 199,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_16',
       'bike_name': 'Hero Xpulse 200',
+      'brand': 'Hero',
+      'model': 'Xpulse 200 4V',
       'category': 'Street',
       'rental_price': 800.0,
       'security_deposit': 2000.0,
       'availability_status': 'Available',
-      'registration_number': 'HR-26-BN-3344'
+      'registration_number': 'HR-26-BN-3344',
+      'description': 'Off-road capable adventure bike with rally-tuned suspension.',
+      'color': 'Trail Green',
+      'engine_cc': 199,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_17',
       'bike_name': 'Yamaha MT-15',
+      'brand': 'Yamaha',
+      'model': 'MT-15 V2',
       'category': 'Street',
       'rental_price': 900.0,
       'security_deposit': 2000.0,
       'availability_status': 'Available',
-      'registration_number': 'PB-08-AS-5566'
+      'registration_number': 'PB-08-AS-5566',
+      'description': 'Dark warrior naked streetfighter with VVA technology.',
+      'color': 'Dark Matt Blue',
+      'engine_cc': 155,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_18',
       'bike_name': 'Suzuki Gixxer SF',
+      'brand': 'Suzuki',
+      'model': 'Gixxer SF 250',
       'category': 'Sport',
       'rental_price': 850.0,
       'security_deposit': 2000.0,
       'availability_status': 'Available',
-      'registration_number': 'OD-02-QW-7788'
+      'registration_number': 'OD-02-QW-7788',
+      'description': 'Full-faired sport tourer with oil-cooled SOHC engine.',
+      'color': 'Metallic Triton Blue',
+      'engine_cc': 249,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_19',
       'bike_name': 'Royal Enfield Meteor 350',
+      'brand': 'Royal Enfield',
+      'model': 'Meteor 350',
       'category': 'Cruiser',
       'rental_price': 1350.0,
       'security_deposit': 3500.0,
       'availability_status': 'Available',
-      'registration_number': 'UP-32-DF-9900'
+      'registration_number': 'UP-32-DF-9900',
+      'description': 'Easy-going cruiser with Tripper navigation and refined engine.',
+      'color': 'Fireball Yellow',
+      'engine_cc': 349,
+      'fuel_type': 'Petrol',
+      'transmission': 'Manual',
     },
     {
       'id': 'bike_20',
       'bike_name': 'Honda Dio',
+      'brand': 'Honda',
+      'model': 'Dio 125',
       'category': 'Scooter',
       'rental_price': 350.0,
       'security_deposit': 800.0,
       'availability_status': 'Available',
-      'registration_number': 'TN-22-KJ-1234'
+      'registration_number': 'TN-22-KJ-1234',
+      'description': 'Sporty urban scooter with eSP+ engine and silent start.',
+      'color': 'Matte Axis Grey Metallic',
+      'engine_cc': 124,
+      'fuel_type': 'Petrol',
+      'transmission': 'Automatic',
     }
   ];
 
   static void initializeImages() {
     for (var bike in bikes) {
-      if (!bike.containsKey('imageUrl')) {
+      if (!bike.containsKey('image_url') || bike['image_url'] == null) {
         switch (bike['category']) {
           case 'Cruiser':
-            bike['imageUrl'] = 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000&auto=format&fit=crop';
+            bike['image_url'] = 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1000&auto=format&fit=crop';
             break;
           case 'Sport':
-            bike['imageUrl'] = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=1000&auto=format&fit=crop';
+            bike['image_url'] = 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=1000&auto=format&fit=crop';
             break;
           case 'Scooter':
-            bike['imageUrl'] = 'https://images.unsplash.com/photo-1620610312674-89c02db2cbbe?q=80&w=1000&auto=format&fit=crop';
+            bike['image_url'] = 'https://images.unsplash.com/photo-1620610312674-89c02db2cbbe?q=80&w=1000&auto=format&fit=crop';
             break;
           case 'Street':
           default:
-            bike['imageUrl'] = 'https://images.unsplash.com/photo-1558980663-3685c1d673c4?q=80&w=1000&auto=format&fit=crop';
+            bike['image_url'] = 'https://images.unsplash.com/photo-1558980663-3685c1d673c4?q=80&w=1000&auto=format&fit=crop';
             break;
         }
       }
@@ -221,12 +361,12 @@ class MockData {
       'kycStatus': statuses[index % statuses.length],
       'dlUrl': 'https://placeholder.com/dl_$index.jpg',
       'aadhaarUrl': 'https://placeholder.com/aadhaar_$index.jpg',
-      'isBlocked': index % 15 == 0, // Block every 15th user for demo
+      'isBlocked': index % 15 == 0,
     };
   });
 
   static final List<Map<String, dynamic>> bookings = List.generate(100, (index) {
-    final statuses = ['COMPLETED', 'COMPLETED', 'ACTIVE', 'CONFIRMED', 'CANCELLED', 'REJECTED'];
+    final statuses = ['COMPLETED', 'PENDING', 'ACTIVE', 'CONFIRMED', 'CANCELLED', 'PENDING'];
     final bike = bikes[index % bikes.length];
     final customer = customers[index % customers.length];
     final days = (index % 5) + 1;

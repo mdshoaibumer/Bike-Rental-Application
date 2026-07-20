@@ -50,8 +50,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     
     if (token != null && token.isNotEmpty) {
       AppRole role = AppRole.customer;
-      if (roleStr == 'ADMIN') role = AppRole.admin;
-      else if (roleStr == 'STAFF') role = AppRole.staff;
+      if (roleStr == 'ADMIN') {
+        role = AppRole.admin;
+      } else if (roleStr == 'STAFF') {
+        role = AppRole.staff;
+      }
       
       state = state.copyWith(status: AuthStatus.authenticated, role: role);
     } else {
@@ -105,8 +108,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _storage.saveRole(roleStr);
       
       AppRole role = AppRole.customer;
-      if (roleStr == 'ADMIN') role = AppRole.admin;
-      else if (roleStr == 'STAFF') role = AppRole.staff;
+      if (roleStr == 'ADMIN') {
+        role = AppRole.admin;
+      } else if (roleStr == 'STAFF') {
+        role = AppRole.staff;
+      }
 
       state = state.copyWith(status: AuthStatus.authenticated, role: role);
       return true;
@@ -144,8 +150,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await _storage.saveRole(roleStr);
       
       AppRole role = AppRole.admin;
-      if (roleStr == 'CUSTOMER') role = AppRole.customer;
-      else if (roleStr == 'STAFF') role = AppRole.staff;
+      if (roleStr == 'CUSTOMER') {
+        role = AppRole.customer;
+      } else if (roleStr == 'STAFF') {
+        role = AppRole.staff;
+      }
 
       state = state.copyWith(status: AuthStatus.authenticated, role: role);
       return true;

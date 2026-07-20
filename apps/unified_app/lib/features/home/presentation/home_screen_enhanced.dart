@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared/widgets/premium_bike_card.dart';
-import 'package:shared/widgets/shimmer_loader.dart';
 import 'package:shared/widgets/empty_state_widget.dart';
 import 'package:shared/widgets/premium_search_field.dart';
 import 'package:shared/widgets/floating_filter_button.dart';

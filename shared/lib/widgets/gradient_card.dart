@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
@@ -41,13 +42,10 @@ class GradientCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         child: enableGlassMorphism
             ? BackdropFilter(
-                filter: const ColorFilter.mode(
-                  Color(0x1A000000),
-                  BlendMode.darken,
-                ),
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: AppTheme.glassGradient(isDark).scale(opacity),
+                    gradient: AppTheme.glassGradient(isDark),
                     borderRadius: BorderRadius.circular(borderRadius),
                     border: Border.all(
                       color: isDark

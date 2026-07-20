@@ -54,11 +54,10 @@ class Bike {
       engineCC: json['engine_cc'] ?? 0,
       fuelType: json['fuel_type'] ?? 'Petrol',
       transmission: json['transmission'] ?? 'Manual',
-      imageUrl: json['image_url'],
+      imageUrl: json['image_url'] ?? json['imageUrl'],
       registrationNumber: json['registration_number'],
     );
   }
-
 }
 
 class BikeCategory {

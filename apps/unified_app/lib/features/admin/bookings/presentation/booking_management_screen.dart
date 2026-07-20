@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared/widgets/empty_state_widget.dart';
 import 'package:shared/widgets/shimmer_loader.dart';
 import '../../../../core/admin_providers.dart';
+
+String _formatBookingDate(String isoDate) {
+  try {
+    final date = DateTime.parse(isoDate);
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day} ${months[date.month - 1]}';
+  } catch (_) {
+    return isoDate.length > 10 ? isoDate.substring(0, 10) : isoDate;
+  }
+}
 
 class BookingManagementScreen extends ConsumerStatefulWidget {
   const BookingManagementScreen({super.key});
@@ -134,7 +143,7 @@ class _BookingManagementScreenState extends ConsumerState<BookingManagementScree
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${booking.pickupDate} → ${booking.returnDate}',
+                      Text('${_formatBookingDate(booking.pickupDate)} → ${_formatBookingDate(booking.returnDate)}',
                           style: const TextStyle(fontSize: 12)),
                       Text('₹${booking.amount.toStringAsFixed(0)}',
                           style: const TextStyle(fontWeight: FontWeight.bold)),

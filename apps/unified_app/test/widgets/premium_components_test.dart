@@ -59,8 +59,7 @@ void main() {
         ),
       );
 
-      expect(find.text('4.5'), findsOneWidget);
-      expect(find.text('(100)'), findsOneWidget);
+      expect(find.text('4.5 (100)'), findsOneWidget);
     });
 
     testWidgets('GradientCard is tappable', (WidgetTester tester) async {
@@ -92,7 +91,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: AppTheme.primaryGradient,
               ),
               child: const Text('Gradient Applied'),
@@ -177,11 +176,12 @@ void main() {
   group('Responsive Design Tests', () {
     testWidgets('Components adapt to small screen',
         (WidgetTester tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(400, 800);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -191,7 +191,7 @@ void main() {
                     value: '100',
                     icon: Icons.star,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   StatCard(
                     label: 'Test 2',
                     value: '50',
@@ -209,15 +209,16 @@ void main() {
 
     testWidgets('Components adapt to large screen',
         (WidgetTester tester) async {
-      tester.binding.window.physicalSizeTestValue = const Size(1200, 800);
-      addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: StatCard(
                     label: 'Test',
                     value: '100',
@@ -225,7 +226,7 @@ void main() {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                const Expanded(
                   child: StatCard(
                     label: 'Test 2',
                     value: '50',

@@ -111,7 +111,10 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                                 const _FallbackImage(),
                           ),
                         )
-                      : const Hero(tag: 'bike_img_fallback', child: _FallbackImage()),
+                      : Hero(
+                          tag: 'bike_img_${widget.id}',
+                          child: const _FallbackImage(),
+                        ),
                   ),
                   // Premium gradient overlay
                   Positioned.fill(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared/widgets/premium_app_bar.dart';
-import 'package:shared/widgets/glass_morphism_container.dart';
 import 'package:shared/widgets/stat_card.dart';
 import 'package:shared/theme/app_theme.dart';
 import '../../../core/providers.dart';
@@ -13,7 +11,6 @@ class ProfileScreenPremium extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: CustomScrollView(
@@ -94,7 +91,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Total Rides',
                           value: '12',
                           icon: Icons.directions_bike_rounded,
-                          color: AppTheme.primaryBlue,
+                          iconColor: AppTheme.primaryBlue,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -103,7 +100,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Total Spent',
                           value: '₹2,480',
                           icon: Icons.wallet_rounded,
-                          color: AppTheme.accentOrange,
+                          iconColor: AppTheme.accentOrange,
                         ),
                       ),
                     ],
@@ -116,7 +113,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Km Travelled',
                           value: '142',
                           icon: Icons.route_rounded,
-                          color: AppTheme.successGreen,
+                          iconColor: AppTheme.successGreen,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -125,7 +122,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Avg Rating',
                           value: '4.8',
                           icon: Icons.star_rounded,
-                          color: AppTheme.warningAmber,
+                          iconColor: AppTheme.warningAmber,
                         ),
                       ),
                     ],
@@ -251,7 +248,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                     );
                     if (confirmed ?? false) {
                       await ref.read(authProvider.notifier).logout();
-                      if (ctx.mounted) context.go('/login');
+                      if (context.mounted) context.go('/login');
                     }
                   },
                   borderRadius: BorderRadius.circular(16),
