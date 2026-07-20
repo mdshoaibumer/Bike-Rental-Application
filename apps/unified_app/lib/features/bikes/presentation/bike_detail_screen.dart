@@ -287,6 +287,16 @@ class _BikeDetailScreenState extends ConsumerState<BikeDetailScreen> {
 
   Future<void> _handleBook(String bikeId) async {
     if (_selectedDates == null) return;
+    
+    // Show confirmation dialog first
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => _buildBookingConfirmationDialog(ctx, bikeId),
+    );
+    
+    if (confirmed != true) return;
+    
     setState(() => _isBooking = true);
     try {
       await ref.read(bookingsProvider.notifier).createBooking(
@@ -309,5 +319,253 @@ class _BikeDetailScreenState extends ConsumerState<BikeDetailScreen> {
     } finally {
       if (mounted) setState(() => _isBooking = false);
     }
+  }
+
+  Widget _buildBookingConfirmationDialog(BuildContext ctx, String bikeId) {
+    final bike = ref.read(bikeDetailProvider(bikeId)).maybeWhen(
+      data: (bike) => bike,
+      orElse: () => null,
+    );
+    
+    if (bike == null || _selectedDates == null) {
+      return const SizedBox.shrink();
+    }
+
+    final totalPrice = bike.rentalPrice * _selectedDates!.duration.inDays;
+    final taxAmount = totalPrice * 0.18; // 18% GST
+    final finalAmount = totalPrice + taxAmount;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(ctx).colorScheme.primary,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Confirm Your Booking',
+                    style: Theme.of(ctx).textTheme.headlineSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    bike.bikeName,
+                    style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Rental Period
+                  _buildConfirmationRow(
+                    ctx,
+                    icon: Icons.calendar_month_rounded,
+                    label: 'Rental Period',
+                    value: '${_formatDate(_selectedDates!.start)} - ${_formatDate(_selectedDates!.end)}',
+                  ),
+                  const SizedBox(height: 16),
+                  _buildConfirmationRow(
+                    ctx,
+                    icon: Icons.timer_outlined,
+                    label: 'Duration',
+                    value: '${_selectedDates!.duration.inDays} Days',
+                  ),
+                  const Divider(height: 32),
+                  // Price Breakdown
+                  _buildConfirmationRow(
+                    ctx,
+                    label: 'Rental (${_selectedDates!.duration.inDays}d × ₹${bike.rentalPrice.toInt()})',
+                    value: '₹${totalPrice.toStringAsFixed(0)}',
+                    isLabel: true,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildConfirmationRow(
+                    ctx,
+                    label: 'GST (18%)',
+                    value: '₹${taxAmount.toStringAsFixed(0)}',
+                    isLabel: true,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(ctx).colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _buildConfirmationRow(
+                      ctx,
+                      label: 'Total Amount',
+                      value: '₹${finalAmount.toStringAsFixed(0)}',
+                      isBold: true,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Policy & Terms
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.info_outline, color: Colors.orange, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cancellation Policy',
+                              style: Theme.of(ctx).textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '• Free cancellation within 48 hours\n• After 48h: 25% penalty\n• No refund within 24 hours of pickup',
+                          style: Theme.of(ctx).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Checkbox Acceptance
+                  StatefulBuilder(
+                    builder: (ctx, setState) {
+                      bool _accepted = false;
+                      return Column(
+                        children: [
+                          CheckboxListTile(
+                            value: _accepted,
+                            onChanged: (value) {
+                              setState(() => _accepted = value ?? false);
+                            },
+                            title: Text(
+                              'I accept the cancellation policy and terms',
+                              style: Theme.of(ctx).textTheme.bodySmall,
+                            ),
+                            contentPadding: EdgeInsets.zero,
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                          const SizedBox(height: 16),
+                          // Action Buttons
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey[300],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () => Navigator.pop(ctx, false),
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Theme.of(ctx).colorScheme.primary,
+                                    disabledBackgroundColor: Colors.grey[400],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: _accepted ? () => Navigator.pop(ctx, true) : null,
+                                  child: const Text(
+                                    'Confirm Booking',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConfirmationRow(
+    BuildContext ctx, {
+    IconData? icon,
+    required String label,
+    required String value,
+    bool isLabel = false,
+    bool isBold = false,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 18, color: Theme.of(ctx).colorScheme.primary),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                    fontWeight: isBold ? FontWeight.bold : (isLabel ? FontWeight.normal : FontWeight.w500),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          value,
+          style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+            color: isBold ? Theme.of(ctx).colorScheme.primary : null,
+          ),
+          textAlign: TextAlign.right,
+        ),
+      ],
+    );
   }
 }
