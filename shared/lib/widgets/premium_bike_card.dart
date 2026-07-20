@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
-class PremiumBikeCard extends StatelessWidget {
+class PremiumBikeCard extends StatefulWidget {
   final String id;
   final String name;
   final String brand;
@@ -9,6 +10,10 @@ class PremiumBikeCard extends StatelessWidget {
   final String category;
   final String status;
   final VoidCallback onTap;
+  final double? rating;
+  final int? reviewCount;
+  final bool? isFavorite;
+  final ValueChanged<bool>? onFavoriteChanged;
 
   const PremiumBikeCard({
     super.key,
@@ -20,14 +25,69 @@ class PremiumBikeCard extends StatelessWidget {
     this.category = 'Standard',
     this.status = 'Available',
     required this.onTap,
+    this.rating,
+    this.reviewCount,
+    this.isFavorite = false,
+    this.onFavoriteChanged,
   });
 
   @override
+  State<PremiumBikeCard> createState() => _PremiumBikeCardState();
+}
+
+class _PremiumBikeCardState extends State<PremiumBikeCard>
+    with SingleTickerProviderStateMixin {
+  bool _isFavorite = false;
+  late AnimationController _favoriteAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.isFavorite ?? false;
+    _favoriteAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+  }
+
+  @override
+  void didUpdateWidget(PremiumBikeCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isFavorite != widget.isFavorite) {
+      _isFavorite = widget.isFavorite ?? false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _favoriteAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorite = !_isFavorite;
+      if (_isFavorite) {
+        _favoriteAnimationController.forward();
+      } else {
+        _favoriteAnimationController.reverse();
+      }
+    });
+    widget.onFavoriteChanged?.call(_isFavorite);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isAvailable = widget.status.toLowerCase() == 'available';
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppTheme.cardShadow,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,19 +96,25 @@ class PremiumBikeCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  if (imageUrl != null)
-                    Hero(
-                      tag: 'bike_img_$id',
-                      child: Image.network(
-                        imageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const _FallbackImage(),
-                      ),
-                    )
-                  else
-                    const Hero(tag: 'bike_img_fallback', child: _FallbackImage()),
-                  // Gradient for better text readability if we had text overlay
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    child: if (widget.imageUrl != null)
+                      Hero(
+                        tag: 'bike_img_${widget.id}',
+                        child: Image.network(
+                          widget.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const _FallbackImage(),
+                        ),
+                      )
+                    else
+                      const Hero(tag: 'bike_img_fallback', child: _FallbackImage()),
+                  ),
+                  // Premium gradient overlay
                   Positioned.fill(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -57,65 +123,106 @@ class PremiumBikeCard extends StatelessWidget {
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withOpacity(0.05),
+                            Colors.black.withValues(alpha: 0.2),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  // Status Chip
-                  if (status.isNotEmpty)
+                  // Status Badge
+                  if (widget.status.isNotEmpty)
                     Positioned(
                       top: 12,
                       left: 12,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: status.toLowerCase() == 'available' 
-                              ? Colors.green.shade600 
-                              : Colors.red.shade600,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 4,
-                            )
+                          color: isAvailable
+                              ? AppTheme._successGreen.withValues(alpha: 0.95)
+                              : AppTheme._warningAmber.withValues(alpha: 0.95),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: AppTheme.cardShadow,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isAvailable ? Icons.check_circle : Icons.schedule,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.status,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
-                        child: Text(
-                          status,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  // Favorite Button
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: GestureDetector(
+                      onTap: _toggleFavorite,
+                      child: ScaleTransition(
+                        scale: Tween<double>(begin: 1.0, end: 1.2).animate(
+                          CurvedAnimation(
+                            parent: _favoriteAnimationController,
+                            curve: Curves.elasticOut,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.95),
+                            shape: BoxShape.circle,
+                            boxShadow: AppTheme.cardShadow,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            _isFavorite ? Icons.favorite : Icons.favorite_outline,
+                            color:
+                                _isFavorite ? AppTheme._errorRed : AppTheme._textSecondary,
+                            size: 20,
                           ),
                         ),
                       ),
                     ),
-                  // Pill shaped price tag
+                  ),
+                  // Price Tag
                   Positioned(
                     bottom: 12,
                     right: 12,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.black87.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          )
-                        ],
+                        color: Colors.black87.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: AppTheme.cardShadow,
                       ),
-                      child: Text(
-                        '₹${price.toInt()} / day',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '₹${widget.price.toInt()}',
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            'per day',
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.white70,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -123,45 +230,79 @@ class PremiumBikeCard extends StatelessWidget {
               ),
             ),
             // Details Section
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Name and Brand
                   Text(
-                    name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    widget.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(Icons.directions_bike, size: 14, color: Colors.grey[600]),
-                          const SizedBox(width: 4),
-                          Text(
-                            brand,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
-                          ),
-                        ],
+                      Icon(
+                        Icons.two_wheeler_rounded,
+                        size: 14,
+                        color: AppTheme._textSecondary,
                       ),
+                      const SizedBox(width: 4),
                       Text(
-                        category,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                        widget.brand,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme._textSecondary,
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        child: Text(
+                          widget.category,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppTheme._primaryBlue,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
                   ),
+                  if (widget.rating != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_rounded,
+                          size: 14,
+                          color: AppTheme._accentOrange,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${widget.rating!.toStringAsFixed(1)} (${widget.reviewCount ?? 0})',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppTheme._textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:shared/widgets/premium_bike_card.dart';
 import 'package:shared/widgets/shimmer_loader.dart';
 import 'package:shared/widgets/empty_state_widget.dart';
+import 'package:shared/widgets/premium_search_field.dart';
+import 'package:shared/widgets/floating_filter_button.dart';
+import 'package:shared/widgets/loading_animations.dart';
+import 'package:shared/theme/app_theme.dart';
 import '../../bikes/providers/bike_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -37,59 +41,92 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final bikesState = ref.watch(bikesProvider);
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => ref.read(bikesProvider.notifier).loadBikes(),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 120,
-              floating: true,
-              pinned: true,
-              title: Text(
-                'Explore Bikes',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).appBarTheme.iconTheme?.color,
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () => ref.read(bikesProvider.notifier).loadBikes(),
+            child: CustomScrollView(
+              slivers: [
+                // Premium App Bar with Hero Greeting
+                SliverAppBar(
+                  expandedHeight: 160,
+                  floating: true,
+                  pinned: true,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                      ),
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Good Morning,\nExplorer!',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.2,
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Find your perfect ride today',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: Colors.white70,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-              ),
-              centerTitle: false,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.person_outline_rounded),
-                  onPressed: () => context.push('/profile'),
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search for bikes or brands...',
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear_rounded),
-                            onPressed: () {
-                              _searchController.clear();
-                              ref.read(bikesProvider.notifier).loadBikes();
-                              setState(() {});
-                            },
-                          )
-                        : null,
-                    fillColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
                   ),
-                  onChanged: (_) => setState(() {}),
-                  onSubmitted: (query) {
-                    if (query.isNotEmpty) {
-                      ref.read(bikesProvider.notifier).searchBikes(query);
-                    }
-                  },
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8, top: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.person_outline_rounded,
+                            color: Colors.white),
+                        onPressed: () => context.push('/profile'),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
+                // Premium Search Bar
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    child: PremiumSearchField(
+                      controller: _searchController,
+                      hintText: 'Search bikes or brands...',
+                      onChanged: (_) => setState(() {}),
+                      onClear: () {
+                        _searchController.clear();
+                        ref.read(bikesProvider.notifier).loadBikes();
+                        setState(() {});
+                      },
+                      onFilterTap: () => context.push('/bikes'),
+                      enableVoiceSearch: false,
+                      onSubmitted: (query) {
+                        if (query.isNotEmpty) {
+                          ref.read(bikesProvider.notifier).searchBikes(query);
+                        }
+                      },
+                    ),
+                  ),
+                ),
             if (bikesState.categories.isNotEmpty)
               SliverToBoxAdapter(
                 child: Column(
