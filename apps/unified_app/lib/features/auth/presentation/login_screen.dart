@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared/widgets/primary_button.dart';
+import 'package:shared/widgets/glass_morphism_container.dart';
+import 'package:shared/theme/app_theme.dart';
 import '../../../core/providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -122,56 +124,93 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         if (!_otpSent) ...[
-          TextField(
-            controller: _phoneController,
-            decoration: InputDecoration(
-              labelText: 'Mobile Number',
-              prefixIcon: const Icon(Icons.phone_android_rounded),
-              hintText: '+91 9876543210',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          GlassMorphismContainer(
+            child: TextField(
+              controller: _phoneController,
+              decoration: InputDecoration(
+                labelText: 'Mobile Number',
+                hintText: '+91 9876543210',
+                prefixIcon: const Icon(Icons.phone_android_rounded),
+                border: InputBorder.none,
+                filled: false,
+              ),
+              keyboardType: TextInputType.phone,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            keyboardType: TextInputType.phone,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
           PrimaryButton(
             text: 'Send Verification Code',
             isLoading: _isLoading,
             onPressed: _isLoading ? null : _handleSendOtp,
+            leadingIcon: _isLoading
+                ? null
+                : const Icon(Icons.phone_forwarded_rounded, color: Colors.white, size: 18),
           ),
         ] else ...[
-          TextField(
-            controller: _otpController,
-            decoration: InputDecoration(
-              labelText: 'Verification Code',
-              prefixIcon: const Icon(Icons.lock_outline_rounded),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-            ),
-            keyboardType: TextInputType.number,
-            maxLength: 6,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 8,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          PrimaryButton(
-            text: 'Verify & Login',
-            isLoading: _isLoading,
-            onPressed: _isLoading ? null : _handleVerifyOtp,
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: TextButton(
-              onPressed: () => setState(() => _otpSent = false),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[600],
-              ),
-              child: const Text('Change phone number'),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            child: Column(
+              key: ValueKey(_otpSent),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Verification Code',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Enter the 6-digit code sent to ${_phoneController.text}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppTheme._textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GlassMorphismContainer(
+                  child: TextField(
+                    controller: _otpController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock_outline_rounded),
+                      border: InputBorder.none,
+                      filled: false,
+                      counterText: '',
+                    ),
+                    keyboardType: TextInputType.number,
+                    maxLength: 6,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                PrimaryButton(
+                  text: 'Verify & Login',
+                  isLoading: _isLoading,
+                  onPressed: _isLoading ? null : _handleVerifyOtp,
+                  leadingIcon: _isLoading
+                      ? null
+                      : const Icon(Icons.check_circle_outline_rounded,
+                          color: Colors.white, size: 18),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton(
+                    onPressed: () => setState(() => _otpSent = false),
+                    child: Text(
+                      'Change phone number',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppTheme._primaryBlue,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -183,34 +222,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 32),
-        TextField(
-          controller: _adminIdController,
-          decoration: InputDecoration(
-            labelText: 'Email or Mobile Number',
-            prefixIcon: const Icon(Icons.person_outline_rounded),
-            hintText: 'admin@bikerental.com',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
         const SizedBox(height: 24),
-        TextField(
-          controller: _adminPasswordController,
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'Password',
-            prefixIcon: const Icon(Icons.lock_outline_rounded),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+        GlassMorphismContainer(
+          child: TextField(
+            controller: _adminIdController,
+            decoration: InputDecoration(
+              labelText: 'Email or Mobile Number',
+              hintText: 'admin@bikerental.com',
+              prefixIcon: const Icon(Icons.person_outline_rounded),
+              border: InputBorder.none,
+              filled: false,
+            ),
+            keyboardType: TextInputType.emailAddress,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 20),
+        GlassMorphismContainer(
+          child: TextField(
+            controller: _adminPasswordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              prefixIcon: const Icon(Icons.lock_outline_rounded),
+              border: InputBorder.none,
+              filled: false,
+            ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(height: 28),
         PrimaryButton(
           text: 'Login to Dashboard',
           isLoading: _isLoading,
           onPressed: _isLoading ? null : _handlePasswordLogin,
+          leadingIcon: _isLoading
+              ? null
+              : const Icon(Icons.dashboard_rounded, color: Colors.white, size: 18),
         ),
       ],
     );
@@ -218,56 +270,108 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 40),
+              // Premium Header with Gradient
               Container(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
                   ),
-                  child: Icon(
-                    Icons.electric_moped_rounded,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                ),
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(
+                        Icons.electric_moped_rounded,
+                        size: 32,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Welcome Back',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Premium Bike Rentals',
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 32),
-              Text(
-                'Welcome to\nBike Rental',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      height: 1.2,
+              // Tab Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF2A2A2A)
+                        : Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      color: AppTheme._primaryBlue,
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: AppTheme._textSecondary,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                    tabs: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Tab(text: 'Customer'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Tab(text: 'Admin'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 32),
-              TabBar(
-                controller: _tabController,
-                indicatorColor: Theme.of(context).colorScheme.primary,
-                labelColor: Theme.of(context).colorScheme.primary,
-                unselectedLabelColor: Colors.grey,
-                tabs: const [
-                  Tab(text: 'Customer'),
-                  Tab(text: 'Admin / Owner'),
-                ],
-              ),
-              SizedBox(
-                height: 400,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildCustomerLogin(),
-                    _buildAdminLogin(),
-                  ],
+              // Tab View
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                child: SizedBox(
+                  height: 420,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildCustomerLogin(),
+                      _buildAdminLogin(),
+                    ],
+                  ),
                 ),
               ),
             ],
