@@ -8,14 +8,14 @@ import '../features/auth/presentation/splash_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 
 // Customer screens
-import '../features/home/presentation/home_screen.dart';
+import '../features/home/presentation/home_screen_enhanced.dart';
 import '../features/bikes/presentation/bike_list_screen.dart';
-import '../features/bikes/presentation/bike_detail_screen.dart';
+import '../features/bikes/presentation/bike_detail_screen_enhanced.dart';
 import '../features/booking/presentation/booking_history_screen.dart';
-import '../features/profile/presentation/profile_screen.dart';
+import '../features/profile/presentation/profile_screen_enhanced.dart';
 
 // Admin screens
-import '../features/admin/dashboard/presentation/dashboard_screen.dart';
+import '../features/admin/presentation/admin_dashboard_enhanced.dart';
 import '../features/admin/bikes/presentation/bike_management_screen.dart';
 import '../features/admin/bookings/presentation/booking_management_screen.dart';
 import '../features/admin/customers/presentation/customer_management_screen.dart';
@@ -68,7 +68,7 @@ final GoRouter appRouter = GoRouter(
     // CUSTOMER ROUTES
     GoRoute(
       path: '/home',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const HomeScreenEnhanced(),
     ),
     GoRoute(
       path: '/bikes',
@@ -78,7 +78,7 @@ final GoRouter appRouter = GoRouter(
       path: '/bike/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return BikeDetailScreen(bikeId: id);
+        return BikeDetailScreenEnhanced(bikeId: id);
       },
     ),
     GoRoute(
@@ -87,12 +87,12 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => const ProfileScreen(),
+      builder: (context, state) => const ProfileScreenEnhanced(),
     ),
     // ADMIN ROUTES
     GoRoute(
       path: '/admin/dashboard',
-      builder: (context, state) => const DashboardScreen(),
+      builder: (context, state) => const AdminDashboardEnhanced(),
     ),
     GoRoute(
       path: '/admin/bikes',
