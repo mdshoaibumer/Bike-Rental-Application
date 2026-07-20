@@ -25,6 +25,14 @@ class SecureStorage {
     return await _storage.read(key: 'refresh_token');
   }
 
+  Future<void> saveRole(String role) async {
+    await _storage.write(key: 'user_role', value: role);
+  }
+
+  Future<String?> getRole() async {
+    return await _storage.read(key: 'user_role');
+  }
+
   Future<void> deleteAll() async {
     await _storage.deleteAll();
   }
