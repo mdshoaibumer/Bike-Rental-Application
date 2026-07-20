@@ -25,7 +25,12 @@ class _BikeListScreenState extends ConsumerState<BikeListScreen> {
     final state = ref.watch(bikesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('All Bikes')),
+      appBar: AppBar(
+        title: const Text('All Bikes'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 8,
+      ),
       body: _buildBody(state),
     );
   }
@@ -33,14 +38,14 @@ class _BikeListScreenState extends ConsumerState<BikeListScreen> {
   Widget _buildBody(BikesState state) {
     if (state.isLoading && state.bikes.isEmpty) {
       return GridView.builder(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 16,
+          childAspectRatio: 0.8,
+          crossAxisSpacing: 12,
           mainAxisSpacing: 16,
         ),
-        itemCount: 4,
+        itemCount: 6,
         itemBuilder: (context, index) => const ShimmerLoader(width: double.infinity, height: double.infinity),
       );
     }
@@ -72,12 +77,12 @@ class _BikeListScreenState extends ConsumerState<BikeListScreen> {
     return RefreshIndicator(
       onRefresh: () => ref.read(bikesProvider.notifier).loadBikes(),
       child: GridView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 16,
+          crossAxisSpacing: 12,
           mainAxisSpacing: 16,
-          childAspectRatio: 0.85,
+          childAspectRatio: 0.8,
         ),
         itemCount: state.bikes.length,
         itemBuilder: (context, index) {

@@ -23,6 +23,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   
   bool _otpSent = false;
   bool _isLoading = false;
+  String? _phoneError;
+  String? _otpError;
+  String? _adminError;
 
   @override
   void initState() {
@@ -41,53 +44,83 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   }
 
   void _handleSendOtp() async {
-    final mobile = _phoneController.text.trim();
-    if (mobile.isEmpty || mobile.length < 10) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid phone number')),
-      );
+    final mobile = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '').trim();
+    setState(() => _phoneError = null);
+    
+    if (mobile.isEmpty) {
+      setState(() => _phoneError = 'Phone number is required');
+      return;
+    }
+    if (mobile.length < 10) {
+      setState(() => _phoneError = 'Phone number must be at least 10 digits');
       return;
     }
 
     setState(() => _isLoading = true);
-    await ref.read(authProvider.notifier).sendOTP(mobile);
-    setState(() {
-      _isLoading = false;
-      _otpSent = true;
-    });
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification code sent!')),
-      );
+    try {
+      await ref.read(authProvider.notifier).sendOTP(mobile);
+      setState(() {
+        _isLoading = false;
+        _otpSent = true;
+        _phoneError = null;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white, size: 20),
+                SizedBox(width: 12),
+                Text('Verification code sent!'),
+              ],
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _phoneError = 'Failed to send OTP. Please try again.';
+      });
     }
   }
 
   void _handleVerifyOtp() async {
-    final mobile = _phoneController.text.trim();
+    final mobile = _phoneController.text.replaceAll(RegExp(r'[^\d]'), '').trim();
     final code = _otpController.text.trim();
 
-    if (code.isEmpty || code.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter 6-digit code')),
-      );
+    setState(() => _otpError = null);
+
+    if (code.isEmpty) {
+      setState(() => _otpError = 'Please enter the verification code');
+      return;
+    }
+    if (code.length != 6 || !RegExp(r'^\d{6}$').hasMatch(code)) {
+      setState(() => _otpError = 'Code must be exactly 6 digits');
       return;
     }
 
     setState(() => _isLoading = true);
-    final success = await ref.read(authProvider.notifier).verifyOTP(mobile, code);
-    setState(() => _isLoading = false);
+    try {
+      final success = await ref.read(authProvider.notifier).verifyOTP(mobile, code);
+      setState(() => _isLoading = false);
 
-    if (success && mounted) {
-      final role = ref.read(authProvider).role;
-      if (role == AppRole.admin) {
-        context.go('/admin/dashboard');
-      } else {
-        context.go('/home');
+      if (success && mounted) {
+        final role = ref.read(authProvider).role;
+        if (role == AppRole.admin) {
+          context.go('/admin/dashboard');
+        } else {
+          context.go('/home');
+        }
+      } else if (mounted) {
+        setState(() => _otpError = 'Invalid or expired verification code');
       }
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid or expired verification code')),
-      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _otpError = 'Verification failed. Please try again.';
+      });
     }
   }
 
@@ -95,28 +128,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     final id = _adminIdController.text.trim();
     final password = _adminPasswordController.text;
 
-    if (id.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter credentials')),
-      );
+    setState(() => _adminError = null);
+
+    if (id.isEmpty) {
+      setState(() => _adminError = 'Email or mobile is required');
+      return;
+    }
+    if (password.isEmpty) {
+      setState(() => _adminError = 'Password is required');
       return;
     }
 
     setState(() => _isLoading = true);
-    final success = await ref.read(authProvider.notifier).loginWithPassword(id, password);
-    setState(() => _isLoading = false);
+    try {
+      final success = await ref.read(authProvider.notifier).loginWithPassword(id, password);
+      setState(() => _isLoading = false);
 
-    if (success && mounted) {
-      final role = ref.read(authProvider).role;
-      if (role == AppRole.admin) {
-        context.go('/admin/dashboard');
-      } else {
-        context.go('/home');
+      if (success && mounted) {
+        final role = ref.read(authProvider).role;
+        if (role == AppRole.admin) {
+          context.go('/admin/dashboard');
+        } else {
+          context.go('/home');
+        }
+      } else if (mounted) {
+        setState(() => _adminError = 'Invalid email/mobile or password');
       }
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid credentials')),
-      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _adminError = 'Login failed. Please try again.';
+      });
     }
   }
 
@@ -135,13 +177,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 prefixIcon: const Icon(Icons.phone_android_rounded),
                 border: InputBorder.none,
                 filled: false,
+                errorText: null,
               ),
               keyboardType: TextInputType.phone,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
+              onChanged: (_) => setState(() => _phoneError = null),
             ),
           ),
+          if (_phoneError != null) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline, size: 16, color: Colors.red),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _phoneError!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 28),
           PrimaryButton(
             text: 'Send Verification Code',
@@ -186,8 +251,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                       letterSpacing: 12,
                     ),
                     textAlign: TextAlign.center,
+                    onChanged: (_) => setState(() => _otpError = null),
                   ),
                 ),
+                if (_otpError != null) ...[
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.error_outline, size: 16, color: Colors.red),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _otpError!,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 28),
                 PrimaryButton(
                   text: 'Verify & Login',
@@ -237,6 +324,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
             ),
+            onChanged: (_) => setState(() => _adminError = null),
           ),
         ),
         const SizedBox(height: 20),
@@ -253,8 +341,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
             ),
+            onChanged: (_) => setState(() => _adminError = null),
           ),
         ),
+        if (_adminError != null) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.red.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline, size: 18, color: Colors.red),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _adminError!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: 28),
         PrimaryButton(
           text: 'Login to Dashboard',

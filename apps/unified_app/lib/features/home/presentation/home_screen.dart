@@ -107,7 +107,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 // Premium Search Bar
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
                     child: PremiumSearchField(
                       controller: _searchController,
                       hintText: 'Search bikes or brands...',
@@ -133,44 +133,59 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 28, 16, 12),
                       child: Text(
                         'Categories',
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.2,
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 44,
+                      height: 48,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         itemCount: bikesState.categories.length,
                         itemBuilder: (context, index) {
                           final cat = bikesState.categories[index];
                           final isSelected = _selectedIndex == index;
                           return Padding(
-                            padding: const EdgeInsets.only(right: 12),
-                            child: ChoiceChip(
-                              label: Text(cat.name),
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: FilterChip(
+                              label: Text(
+                                cat.name,
+                                style: TextStyle(
+                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
                               selected: isSelected,
                               onSelected: (selected) {
                                 setState(() => _selectedIndex = index);
                                 ref.read(bikesProvider.notifier).searchBikes(cat.name);
                               },
+                              backgroundColor: Theme.of(context).colorScheme.surface,
+                              selectedColor: Theme.of(context).colorScheme.primary,
                               labelStyle: TextStyle(
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                color: isSelected ? Colors.white : null,
+                                color: isSelected ? Colors.white : Colors.grey[700],
+                              ),
+                              side: BorderSide(
+                                color: isSelected 
+                                  ? Colors.transparent
+                                  : Colors.grey[300]!,
+                                width: 1,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              showCheckmark: false,
                             ),
                           );
                         },
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                   ],
                 ),
               ),
@@ -197,19 +212,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ],
         ),
       ),
-    ],
-  ),
-  bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 1) context.push('/bookings');
-          if (index == 2) context.push('/profile');
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.explore_rounded), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.history_rounded), label: 'Bookings'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: 'Profile'),
         ],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              spreadRadius: 2,
+              offset: const Offset(0, -8),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: 0,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            if (index == 1) context.push('/bookings');
+            if (index == 2) context.push('/profile');
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore_rounded),
+              label: 'Explore',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history_rounded),
+              label: 'Bookings',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline_rounded),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -217,17 +255,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildBikesList(BikesState bikesState) {
     if (bikesState.isLoading) {
       return SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
         sliver: SliverGrid(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.8,
             mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
+            crossAxisSpacing: 12,
           ),
           delegate: SliverChildBuilderDelegate(
             (context, index) => const ShimmerLoader(width: double.infinity, height: double.infinity),
-            childCount: 4,
+            childCount: 6,
           ),
         ),
       );
@@ -256,13 +294,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.75,
+          childAspectRatio: 0.8,
           mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
+          crossAxisSpacing: 12,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
