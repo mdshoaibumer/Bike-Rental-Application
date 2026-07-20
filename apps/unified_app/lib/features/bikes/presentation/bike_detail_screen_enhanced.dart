@@ -104,14 +104,14 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
                     child: SafeArea(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.95),
+                          color: Colors.white.withOpacity(0.95),
                           shape: BoxShape.circle,
                           boxShadow: AppTheme.cardShadow,
                         ),
                         padding: const EdgeInsets.all(12),
                         child: Icon(
                           Icons.favorite_outline,
-                          color: AppTheme._textSecondary,
+                          color: AppTheme.textSecondary,
                           size: 24,
                         ),
                       ),
@@ -133,8 +133,8 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
                             height: 8,
                             decoration: BoxDecoration(
                               color: _currentImageIndex == index
-                                  ? AppTheme._accentOrange
-                                  : Colors.white.withValues(alpha: 0.5),
+                                  ? AppTheme.accentOrange
+                                  : Colors.white.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -150,12 +150,12 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
               child: Container(
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: Colors.white.withOpacity(0.9),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.arrow_back,
-                  color: AppTheme._textPrimary,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ),
@@ -184,7 +184,7 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
                             .textTheme
                             .bodyLarge
                             ?.copyWith(
-                              color: AppTheme._textSecondary,
+                              color: AppTheme.textSecondary,
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -192,7 +192,7 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
                       Text(
                         '₹899/day',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppTheme._primaryBlue,
+                          color: AppTheme.primaryBlue,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -341,7 +341,7 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
       // Sticky Booking Button
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/booking/checkout'),
-        backgroundColor: AppTheme._primaryBlue,
+        backgroundColor: AppTheme.primaryBlue,
         label: const Text('Book Now'),
         icon: const Icon(Icons.check_circle_outline),
       ),
@@ -356,7 +356,7 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
         color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+          color: AppTheme.primaryBlue.withOpacity(0.1),
         ),
       ),
       padding: const EdgeInsets.all(16),
@@ -366,7 +366,7 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme._textSecondary,
+              color: AppTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -384,10 +384,10 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
   Widget _buildFeatureChip(BuildContext context, String label, IconData icon) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+        color: AppTheme.primaryBlue.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme._primaryBlue.withValues(alpha: 0.2),
+          color: AppTheme.primaryBlue.withOpacity(0.2),
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -397,13 +397,13 @@ class _BikeDetailScreenEnhancedState extends ConsumerState<BikeDetailScreenEnhan
           Icon(
             icon,
             size: 16,
-            color: AppTheme._primaryBlue,
+            color: AppTheme.primaryBlue,
           ),
           const SizedBox(width: 6),
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme._primaryBlue,
+              color: AppTheme.primaryBlue,
               fontWeight: FontWeight.w600,
             ),
           ),

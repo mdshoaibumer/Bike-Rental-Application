@@ -101,18 +101,17 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24),
                     ),
-                    child: if (widget.imageUrl != null)
-                      Hero(
-                        tag: 'bike_img_${widget.id}',
-                        child: Image.network(
-                          widget.imageUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const _FallbackImage(),
-                        ),
-                      )
-                    else
-                      const Hero(tag: 'bike_img_fallback', child: _FallbackImage()),
+                    child: widget.imageUrl != null
+                      ? Hero(
+                          tag: 'bike_img_${widget.id}',
+                          child: Image.network(
+                            widget.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const _FallbackImage(),
+                          ),
+                        )
+                      : const Hero(tag: 'bike_img_fallback', child: _FallbackImage()),
                   ),
                   // Premium gradient overlay
                   Positioned.fill(
@@ -123,7 +122,7 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            Colors.black.withValues(alpha: 0.2),
+                            Colors.black.withOpacity(0.2),
                           ],
                         ),
                       ),
@@ -138,8 +137,8 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: isAvailable
-                              ? AppTheme._successGreen.withValues(alpha: 0.95)
-                              : AppTheme._warningAmber.withValues(alpha: 0.95),
+                              ? AppTheme.successGreen.withOpacity(0.95)
+                              : AppTheme.warningAmber.withOpacity(0.95),
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: AppTheme.cardShadow,
                         ),
@@ -178,7 +177,7 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.95),
+                            color: Colors.white.withOpacity(0.95),
                             shape: BoxShape.circle,
                             boxShadow: AppTheme.cardShadow,
                           ),
@@ -186,7 +185,7 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                           child: Icon(
                             _isFavorite ? Icons.favorite : Icons.favorite_outline,
                             color:
-                                _isFavorite ? AppTheme._errorRed : AppTheme._textSecondary,
+                                _isFavorite ? AppTheme.errorRed : AppTheme.textSecondary,
                             size: 20,
                           ),
                         ),
@@ -200,7 +199,7 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: Colors.black87.withValues(alpha: 0.85),
+                        color: Colors.black87.withOpacity(0.85),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: AppTheme.cardShadow,
                       ),
@@ -257,26 +256,26 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                       Icon(
                         Icons.two_wheeler_rounded,
                         size: 14,
-                        color: AppTheme._textSecondary,
+                        color: AppTheme.textSecondary,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.brand,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme._textSecondary,
+                          color: AppTheme.textSecondary,
                         ),
                       ),
                       const Spacer(),
                       Container(
                         decoration: BoxDecoration(
-                          color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                          color: AppTheme.primaryBlue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         child: Text(
                           widget.category,
                           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AppTheme._primaryBlue,
+                            color: AppTheme.primaryBlue,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -290,13 +289,13 @@ class _PremiumBikeCardState extends State<PremiumBikeCard>
                         Icon(
                           Icons.star_rounded,
                           size: 14,
-                          color: AppTheme._accentOrange,
+                          color: AppTheme.accentOrange,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '${widget.rating!.toStringAsFixed(1)} (${widget.reviewCount ?? 0})',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme._textSecondary,
+                            color: AppTheme.textSecondary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

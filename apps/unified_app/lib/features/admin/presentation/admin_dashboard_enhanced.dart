@@ -29,7 +29,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+              color: AppTheme.primaryBlue.withOpacity(0.1),
             ),
             child: const Icon(Icons.account_circle_rounded),
           ),
@@ -127,7 +127,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: AppTheme._accentOrange.withValues(alpha: 0.1),
+                            color: AppTheme.accentOrange.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -140,7 +140,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                 .textTheme
                                 .labelSmall
                                 ?.copyWith(
-                                  color: AppTheme._accentOrange,
+                                  color: AppTheme.accentOrange,
                                   fontWeight: FontWeight.w600,
                                 ),
                           ),
@@ -190,7 +190,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -217,7 +217,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: AppTheme._textSecondary,
+                                      color: AppTheme.textSecondary,
                                     ),
                               ),
                             ],
@@ -233,7 +233,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                   .textTheme
                                   .labelLarge
                                   ?.copyWith(
-                                    color: AppTheme._primaryBlue,
+                                    color: AppTheme.primaryBlue,
                                     fontWeight: FontWeight.w700,
                                   ),
                             ),
@@ -241,10 +241,10 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                             Container(
                               decoration: BoxDecoration(
                                 color: [
-                                  AppTheme._successGreen,
-                                  AppTheme._accentOrange,
-                                  AppTheme._primaryBlue,
-                                ][index % 3].withValues(alpha: 0.15),
+                                  AppTheme.successGreen,
+                                  AppTheme.accentOrange,
+                                  AppTheme.primaryBlue,
+                                ][index % 3].withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -262,9 +262,9 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                     .labelSmall
                                     ?.copyWith(
                                       color: [
-                                        AppTheme._successGreen,
-                                        AppTheme._accentOrange,
-                                        AppTheme._primaryBlue,
+                                        AppTheme.successGreen,
+                                        AppTheme.accentOrange,
+                                        AppTheme.primaryBlue,
                                       ][index % 3],
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -309,7 +309,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -340,7 +340,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: AppTheme._textSecondary,
+                                      color: AppTheme.textSecondary,
                                     ),
                               ),
                             ],
@@ -356,15 +356,15 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                   .textTheme
                                   .labelLarge
                                   ?.copyWith(
-                                    color: AppTheme._primaryBlue,
+                                    color: AppTheme.primaryBlue,
                                     fontWeight: FontWeight.w700,
                                   ),
                             ),
                             const SizedBox(height: 4),
                             Container(
                               decoration: BoxDecoration(
-                                color: AppTheme._accentOrange
-                                    .withValues(alpha: 0.15),
+                                color: AppTheme.accentOrange
+                                    .withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -377,7 +377,7 @@ class AdminDashboardEnhanced extends ConsumerWidget {
                                     .textTheme
                                     .labelSmall
                                     ?.copyWith(
-                                      color: AppTheme._accentOrange,
+                                      color: AppTheme.accentOrange,
                                       fontWeight: FontWeight.w600,
                                     ),
                               ),

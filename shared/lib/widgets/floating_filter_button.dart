@@ -57,7 +57,7 @@ class _FloatingFilterButtonState extends State<FloatingFilterButton>
       scale: _scaleAnimation,
       child: FloatingActionButton(
         onPressed: widget.onTap,
-        backgroundColor: AppTheme._primaryBlue,
+        backgroundColor: AppTheme.primaryBlue,
         elevation: 8,
         child: Stack(
           children: [
@@ -75,7 +75,7 @@ class _FloatingFilterButtonState extends State<FloatingFilterButton>
                 right: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppTheme._errorRed,
+                    color: AppTheme.errorRed,
                     shape: BoxShape.circle,
                     boxShadow: AppTheme.cardShadow,
                   ),

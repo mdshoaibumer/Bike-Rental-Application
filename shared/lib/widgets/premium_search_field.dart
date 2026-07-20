@@ -13,6 +13,8 @@ class PremiumSearchField extends StatefulWidget {
   final VoidCallback? onFilterTap;
   final InputDecoration? decoration;
 
+  final ValueChanged<String>? onSubmitted;
+  
   const PremiumSearchField({
     Key? key,
     this.controller,
@@ -24,6 +26,7 @@ class PremiumSearchField extends StatefulWidget {
     this.enableFilter = true,
     this.onFilterTap,
     this.decoration,
+    this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -36,11 +39,15 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isFocused = false;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+    
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -55,11 +62,13 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
     if (widget.controller == null) {
       _controller.dispose();
     }
+    _focusNode.dispose();
     _animationController.dispose();
     super.dispose();
   }
 
-  void _onFocus(bool focused) {
+  void _onFocusChange() {
+    final focused = _focusNode.hasFocus;
     setState(() => _isFocused = focused);
     if (focused) {
       _animationController.forward();
@@ -88,11 +97,12 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
           ),
           child: TextField(
             controller: _controller,
+            focusNode: _focusNode,
+            onSubmitted: widget.onSubmitted,
             onChanged: (value) {
               setState(() {});
               widget.onChanged?.call(value);
             },
-            onFocusChange: _onFocus,
             decoration: widget.decoration ??
                 InputDecoration(
                   hintText: widget.hintText,
@@ -103,9 +113,9 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.search_rounded,
-                    color: AppTheme._accentOrange,
+                    color: AppTheme.accentOrange,
                   ),
                   suffixIcon: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -117,11 +127,11 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
                             widget.onClear?.call();
                             setState(() {});
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
+                          child: const Padding(
+                            padding: EdgeInsets.only(right: 8),
                             child: Icon(
                               Icons.close_rounded,
-                              color: AppTheme._textSecondary,
+                              color: AppTheme.textSecondary,
                               size: 20,
                             ),
                           ),
@@ -129,11 +139,11 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
                       if (widget.enableVoiceSearch)
                         GestureDetector(
                           onTap: widget.onVoiceSearch,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
                             child: Icon(
                               Icons.mic_rounded,
-                              color: AppTheme._accentOrange,
+                              color: AppTheme.accentOrange,
                               size: 20,
                             ),
                           ),
@@ -141,11 +151,11 @@ class _PremiumSearchFieldState extends State<PremiumSearchField>
                       if (widget.enableFilter)
                         GestureDetector(
                           onTap: widget.onFilterTap,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
                             child: Icon(
                               Icons.tune_rounded,
-                              color: AppTheme._accentOrange,
+                              color: AppTheme.accentOrange,
                               size: 20,
                             ),
                           ),

@@ -3,31 +3,31 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Premium Color Palette
-  static const Color _primaryBlue = Color(0xFF0F62FE); // Deep Royal Blue
-  static const Color _electricBlue = Color(0xFF0077FF); // Secondary Blue
-  static const Color _accentOrange = Color(0xFFFF8C42); // Premium Orange CTA
-  static const Color _successGreen = Color(0xFF10B981); // Emerald Green
-  static const Color _warningAmber = Color(0xFFF59E0B); // Amber
-  static const Color _errorRed = Color(0xFFDC2626); // Rich Red
-  static const Color _secondaryAccent = Color(0xFF001D6C); // Deep accent
+  static const Color primaryBlue = Color(0xFF0F62FE); // Deep Royal Blue
+  static const Color electricBlue = Color(0xFF0077FF); // Secondary Blue
+  static const Color accentOrange = Color(0xFFFF8C42); // Premium Orange CTA
+  static const Color successGreen = Color(0xFF10B981); // Emerald Green
+  static const Color warningAmber = Color(0xFFF59E0B); // Amber
+  static const Color errorRed = Color(0xFFDC2626); // Rich Red
+  static const Color secondaryAccent = Color(0xFF001D6C); // Deep accent
   
   // Surfaces
-  static const Color _surfaceLight = Color(0xFFF8FAFC);
-  static const Color _surfaceDark = Color(0xFF0F1419);
-  static const Color _cardLight = Colors.white;
-  static const Color _cardDark = Color(0xFF1E1E1E);
+  static const Color surfaceLight = Color(0xFFF8FAFC);
+  static const Color surfaceDark = Color(0xFF0F1419);
+  static const Color cardLight = Colors.white;
+  static const Color cardDark = Color(0xFF1E1E1E);
   
   // Glass Morphism & Overlays
-  static const Color _glassLight = Color(0xFFFFFFFF);
-  static const Color _glassDark = Color(0xFF1E1E1E);
+  static const Color glassLight = Color(0xFFFFFFFF);
+  static const Color glassDark = Color(0xFF1E1E1E);
   
   // Semantic Colors
-  static const Color _textPrimary = Color(0xFF1F2937);
-  static const Color _textSecondary = Color(0xFF6B7280);
-  static const Color _textTertiary = Color(0xFF9CA3AF);
-  static const Color _textPrimaryDark = Color(0xFFF3F4F6);
-  static const Color _textSecondaryDark = Color(0xFFD1D5DB);
-  static const Color _textTertiaryDark = Color(0xFF9CA3AF);
+  static const Color textPrimary = Color(0xFF1F2937);
+  static const Color textSecondary = Color(0xFF6B7280);
+  static const Color textTertiary = Color(0xFF9CA3AF);
+  static const Color textPrimaryDark = Color(0xFFF3F4F6);
+  static const Color textSecondaryDark = Color(0xFFD1D5DB);
+  static const Color textTertiaryDark = Color(0xFF9CA3AF);
 
   // Premium Shadow System
   static const BoxShadow shadowSm = BoxShadow(
@@ -178,44 +178,44 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: _primaryBlue,
-        primary: _primaryBlue,
-        secondary: _electricBlue,
-        tertiary: _accentOrange,
-        surface: _surfaceLight,
-        surfaceVariant: _cardLight,
-        error: _errorRed,
+        seedColor: primaryBlue,
+        primary: primaryBlue,
+        secondary: electricBlue,
+        tertiary: accentOrange,
+        surface: surfaceLight,
+        surfaceVariant: cardLight,
+        error: errorRed,
         brightness: Brightness.light,
       ),
-      scaffoldBackgroundColor: _surfaceLight,
+      scaffoldBackgroundColor: surfaceLight,
       textTheme: _buildTextTheme(base.textTheme).apply(
-        bodyColor: _textPrimary,
-        displayColor: _textPrimary,
+        bodyColor: textPrimary,
+        displayColor: textPrimary,
       ),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        iconTheme: IconThemeData(color: _textPrimary),
-        titleTextStyle: TextStyle(
-          color: _textPrimary,
+        iconTheme: const IconThemeData(color: textPrimary),
+        titleTextStyle: const TextStyle(
+          color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           fontFamily: 'Outfit',
         ),
       ),
       cardTheme: CardTheme(
-        color: _cardLight,
+        color: cardLight,
         elevation: 0,
-        shadowColor: Colors.black.withValues(alpha: 0.1),
+        shadowColor: Colors.black.withOpacity(0.1),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         margin: EdgeInsets.zero,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: _primaryBlue,
+          backgroundColor: primaryBlue,
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 56),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -236,7 +236,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          side: const BorderSide(color: _primaryBlue, width: 2),
+          side: const BorderSide(color: primaryBlue, width: 2),
           textStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -246,7 +246,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: _primaryBlue,
+          foregroundColor: primaryBlue,
           textStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -264,39 +264,39 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: _primaryBlue, width: 2),
+          borderSide: const BorderSide(color: primaryBlue, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: _errorRed, width: 2),
+          borderSide: const BorderSide(color: errorRed, width: 2),
         ),
         filled: true,
-        fillColor: _surfaceLight,
+        fillColor: surfaceLight,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        hintStyle: TextStyle(
-          color: _textTertiary,
+        hintStyle: const TextStyle(
+          color: textTertiary,
           fontWeight: FontWeight.w400,
         ),
-        labelStyle: TextStyle(
-          color: _textSecondary,
+        labelStyle: const TextStyle(
+          color: textSecondary,
           fontWeight: FontWeight.w500,
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         elevation: 0,
-        backgroundColor: _cardLight,
-        selectedItemColor: _primaryBlue,
-        unselectedItemColor: _textTertiary,
+        backgroundColor: cardLight,
+        selectedItemColor: primaryBlue,
+        unselectedItemColor: textTertiary,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: _surfaceLight,
-        selectedColor: _primaryBlue,
-        disabledColor: _textTertiary.withValues(alpha: 0.12),
+        backgroundColor: surfaceLight,
+        selectedColor: primaryBlue,
+        disabledColor: textTertiary.withOpacity(0.12),
         labelStyle: const TextStyle(
-          color: _textPrimary,
+          color: textPrimary,
           fontWeight: FontWeight.w500,
         ),
         secondaryLabelStyle: const TextStyle(
@@ -313,44 +313,44 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: _primaryBlue,
-        primary: _primaryBlue,
-        secondary: _electricBlue,
-        tertiary: _accentOrange,
-        surface: _surfaceDark,
-        surfaceVariant: _cardDark,
-        error: _errorRed,
+        seedColor: primaryBlue,
+        primary: primaryBlue,
+        secondary: electricBlue,
+        tertiary: accentOrange,
+        surface: surfaceDark,
+        surfaceVariant: cardDark,
+        error: errorRed,
         brightness: Brightness.dark,
       ),
-      scaffoldBackgroundColor: _surfaceDark,
+      scaffoldBackgroundColor: surfaceDark,
       textTheme: _buildTextTheme(base.textTheme).apply(
-        bodyColor: _textPrimaryDark,
-        displayColor: _textPrimaryDark,
+        bodyColor: textPrimaryDark,
+        displayColor: textPrimaryDark,
       ),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        iconTheme: IconThemeData(color: _textPrimaryDark),
-        titleTextStyle: TextStyle(
-          color: _textPrimaryDark,
+        iconTheme: const IconThemeData(color: textPrimaryDark),
+        titleTextStyle: const TextStyle(
+          color: textPrimaryDark,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           fontFamily: 'Outfit',
         ),
       ),
       cardTheme: CardTheme(
-        color: _cardDark,
+        color: cardDark,
         elevation: 0,
-        shadowColor: Colors.black.withValues(alpha: 0.3),
+        shadowColor: Colors.black.withOpacity(0.3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         margin: EdgeInsets.zero,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: _primaryBlue,
+          backgroundColor: primaryBlue,
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 56),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -371,7 +371,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          side: const BorderSide(color: _primaryBlue, width: 2),
+          side: const BorderSide(color: primaryBlue, width: 2),
           textStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -381,7 +381,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: _primaryBlue,
+          foregroundColor: primaryBlue,
           textStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -399,39 +399,39 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: _primaryBlue, width: 2),
+          borderSide: const BorderSide(color: primaryBlue, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: _errorRed, width: 2),
+          borderSide: const BorderSide(color: errorRed, width: 2),
         ),
         filled: true,
-        fillColor: _cardDark,
+        fillColor: cardDark,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        hintStyle: TextStyle(
-          color: _textTertiaryDark,
+        hintStyle: const TextStyle(
+          color: textTertiaryDark,
           fontWeight: FontWeight.w400,
         ),
-        labelStyle: TextStyle(
-          color: _textSecondaryDark,
+        labelStyle: const TextStyle(
+          color: textSecondaryDark,
           fontWeight: FontWeight.w500,
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         elevation: 0,
-        backgroundColor: _cardDark,
-        selectedItemColor: _primaryBlue,
-        unselectedItemColor: _textTertiaryDark,
+        backgroundColor: cardDark,
+        selectedItemColor: primaryBlue,
+        unselectedItemColor: textTertiaryDark,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: Color(0xFF2A2A2A),
-        selectedColor: _primaryBlue,
-        disabledColor: _textTertiaryDark.withValues(alpha: 0.12),
+        backgroundColor: const Color(0xFF2A2A2A),
+        selectedColor: primaryBlue,
+        disabledColor: textTertiaryDark.withOpacity(0.12),
         labelStyle: const TextStyle(
-          color: _textPrimaryDark,
+          color: textPrimaryDark,
           fontWeight: FontWeight.w500,
         ),
         secondaryLabelStyle: const TextStyle(
@@ -445,25 +445,25 @@ class AppTheme {
 
   // Gradient Definitions
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [_primaryBlue, _electricBlue],
+    colors: [primaryBlue, electricBlue],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient accentGradient = LinearGradient(
-    colors: [_accentOrange, Color(0xFFFF6B35)],
+    colors: [accentOrange, Color(0xFFFF6B35)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient successGradient = LinearGradient(
-    colors: [_successGreen, Color(0xFF059669)],
+    colors: [successGreen, Color(0xFF059669)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient surfaceGradient = LinearGradient(
-    colors: [_surfaceLight, Color(0xFFF0F4F8)],
+    colors: [surfaceLight, Color(0xFFF0F4F8)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -472,8 +472,8 @@ class AppTheme {
   static LinearGradient glassGradient(bool isDark) {
     return LinearGradient(
       colors: [
-        isDark ? _glassDark.withValues(alpha: 0.9) : _glassLight.withValues(alpha: 0.9),
-        isDark ? _glassDark.withValues(alpha: 0.7) : _glassLight.withValues(alpha: 0.7),
+        isDark ? glassDark.withOpacity(0.9) : glassLight.withOpacity(0.9),
+        isDark ? glassDark.withOpacity(0.7) : glassLight.withOpacity(0.7),
       ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -482,9 +482,9 @@ class AppTheme {
 
   // Semantic Color Constants
   static const Map<String, Color> semanticColors = {
-    'success': _successGreen,
-    'warning': _warningAmber,
-    'error': _errorRed,
-    'info': _primaryBlue,
+    'success': successGreen,
+    'warning': warningAmber,
+    'error': errorRed,
+    'info': primaryBlue,
   };
 }

@@ -88,7 +88,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced> {
                                     .textTheme
                                     .bodyLarge
                                     ?.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white.withOpacity(0.9),
                                       fontWeight: FontWeight.w500,
                                     ),
                               ),
@@ -192,7 +192,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced> {
                           const SizedBox(height: 12),
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: Colors.white.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -272,7 +272,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced> {
                                           Icons.two_wheeler_rounded,
                                           color: isSelected
                                               ? Colors.white
-                                              : AppTheme._textSecondary,
+                                              : AppTheme.textSecondary,
                                           size: 20,
                                         ),
                                         const SizedBox(width: 8),
@@ -284,7 +284,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced> {
                                               ?.copyWith(
                                                 color: isSelected
                                                     ? Colors.white
-                                                    : AppTheme._textSecondary,
+                                                    : AppTheme.textSecondary,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                         ),

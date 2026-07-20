@@ -51,8 +51,8 @@ class GradientCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(borderRadius),
                     border: Border.all(
                       color: isDark
-                          ? Colors.white.withValues(alpha: 0.2)
-                          : Colors.white.withValues(alpha: 0.2),
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.2),
                     ),
                   ),
                   child: Padding(

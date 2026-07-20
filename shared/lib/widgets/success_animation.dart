@@ -105,10 +105,10 @@ class _SuccessAnimationState extends State<SuccessAnimation>
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppTheme._successGreen,
+                color: AppTheme.successGreen,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme._successGreen.withValues(alpha: 0.4),
+                    color: AppTheme.successGreen.withOpacity(0.4),
                     blurRadius: 30,
                     spreadRadius: 10,
                   ),
@@ -140,7 +140,7 @@ class _SuccessAnimationState extends State<SuccessAnimation>
                         widget.message!,
                         style:
                             Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppTheme._successGreen,
+                          color: AppTheme.successGreen,
                           fontWeight: FontWeight.w700,
                         ),
                         textAlign: TextAlign.center,
@@ -152,7 +152,7 @@ class _SuccessAnimationState extends State<SuccessAnimation>
                           widget.subtitle!,
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppTheme._textSecondary,
+                            color: AppTheme.textSecondary,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -168,11 +168,11 @@ class _SuccessAnimationState extends State<SuccessAnimation>
 
   List<Widget> _buildConfettiParticles() {
     const colors = [
-      AppTheme._primaryBlue,
-      AppTheme._accentOrange,
-      AppTheme._successGreen,
-      AppTheme._warningAmber,
-      AppTheme._errorRed,
+      AppTheme.primaryBlue,
+      AppTheme.accentOrange,
+      AppTheme.successGreen,
+      AppTheme.warningAmber,
+      AppTheme.errorRed,
     ];
 
     return List.generate(

@@ -164,7 +164,7 @@ class PremiumLoadingSpinner extends StatefulWidget {
 
   const PremiumLoadingSpinner({
     Key? key,
-    this.color = AppTheme._primaryBlue,
+    this.color = AppTheme.primaryBlue,
     this.size = 50,
   }) : super(key: key);
 
@@ -201,7 +201,7 @@ class _PremiumLoadingSpinnerState extends State<PremiumLoadingSpinner>
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: widget.color.withValues(alpha: 0.2),
+            color: widget.color.withOpacity(0.2),
             width: 4,
           ),
         ),

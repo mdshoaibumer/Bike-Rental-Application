@@ -31,7 +31,7 @@ class PremiumRatingDisplay extends StatelessWidget {
       stars.add(
         Icon(
           Icons.star_rounded,
-          color: AppTheme._accentOrange,
+          color: AppTheme.accentOrange,
           size: starSize,
         ),
       );
@@ -54,7 +54,7 @@ class PremiumRatingDisplay extends StatelessWidget {
                 clipper: _HalfClipper(),
                 child: Icon(
                   Icons.star_rounded,
-                  color: AppTheme._accentOrange,
+                  color: AppTheme.accentOrange,
                   size: starSize,
                 ),
               ),
@@ -94,7 +94,7 @@ class PremiumRatingDisplay extends StatelessWidget {
             '${rating.toStringAsFixed(1)} ($reviewCount)',
             style: textStyle ??
                 Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppTheme._textSecondary,
+                  color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
           ),

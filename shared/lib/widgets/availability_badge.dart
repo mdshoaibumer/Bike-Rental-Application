@@ -21,22 +21,22 @@ class AvailabilityBadge extends StatelessWidget {
   Color _getBackgroundColor(AvailabilityStatus status) {
     switch (status) {
       case AvailabilityStatus.available:
-        return AppTheme._successGreen.withValues(alpha: 0.15);
+        return AppTheme.successGreen.withOpacity(0.15);
       case AvailabilityStatus.booked:
-        return AppTheme._warningAmber.withValues(alpha: 0.15);
+        return AppTheme.warningAmber.withOpacity(0.15);
       case AvailabilityStatus.maintenance:
-        return AppTheme._errorRed.withValues(alpha: 0.15);
+        return AppTheme.errorRed.withOpacity(0.15);
     }
   }
 
   Color _getTextColor(AvailabilityStatus status) {
     switch (status) {
       case AvailabilityStatus.available:
-        return AppTheme._successGreen;
+        return AppTheme.successGreen;
       case AvailabilityStatus.booked:
-        return AppTheme._warningAmber;
+        return AppTheme.warningAmber;
       case AvailabilityStatus.maintenance:
-        return AppTheme._errorRed;
+        return AppTheme.errorRed;
     }
   }
 

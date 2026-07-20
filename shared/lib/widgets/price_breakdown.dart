@@ -89,7 +89,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                     Text(
                       '${widget.items.length} items',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme._textSecondary,
+                        color: AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -99,7 +99,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                     Text(
                       '${widget.currencySymbol}${_total.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: AppTheme._primaryBlue,
+                        color: AppTheme.primaryBlue,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -159,7 +159,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                               const SizedBox(width: 8),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: AppTheme._successGreen.withValues(alpha: 0.15),
+                                  color: AppTheme.successGreen.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 padding: const EdgeInsets.symmetric(
@@ -172,7 +172,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                                       .textTheme
                                       .labelSmall
                                       ?.copyWith(
-                                        color: AppTheme._successGreen,
+                                        color: AppTheme.successGreen,
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),
@@ -183,7 +183,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                             '-${widget.currencySymbol}${widget.discountAmount.toStringAsFixed(2)}',
                             style:
                                 Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppTheme._successGreen,
+                              color: AppTheme.successGreen,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -205,7 +205,7 @@ class _PriceBreakdownState extends State<PriceBreakdown>
                       '${widget.currencySymbol}${_total.toStringAsFixed(2)}',
                       style:
                           Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppTheme._primaryBlue,
+                        color: AppTheme.primaryBlue,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

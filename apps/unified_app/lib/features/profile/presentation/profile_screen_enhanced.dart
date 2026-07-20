@@ -45,7 +45,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                                 height: 80,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                  color: Colors.white.withOpacity(0.3),
                                   border: Border.all(
                                     color: Colors.white,
                                     width: 3,
@@ -76,7 +76,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                                   const SizedBox(height: 4),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: AppTheme._accentOrange,
+                                      color: AppTheme.accentOrange,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     padding: const EdgeInsets.symmetric(
@@ -215,12 +215,12 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                              color: AppTheme.primaryBlue.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
                               Icons.two_wheeler_rounded,
-                              color: AppTheme._primaryBlue,
+                              color: AppTheme.primaryBlue,
                               size: 32,
                             ),
                           ),
@@ -243,7 +243,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                                       .textTheme
                                       .bodySmall
                                       ?.copyWith(
-                                        color: AppTheme._textSecondary,
+                                        color: AppTheme.textSecondary,
                                       ),
                                 ),
                               ],
@@ -259,15 +259,15 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                                     .textTheme
                                     .labelLarge
                                     ?.copyWith(
-                                      color: AppTheme._primaryBlue,
+                                      color: AppTheme.primaryBlue,
                                       fontWeight: FontWeight.w700,
                                     ),
                               ),
                               const SizedBox(height: 4),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: AppTheme._successGreen
-                                      .withValues(alpha: 0.15),
+                                  color: AppTheme.successGreen
+                                      .withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 padding: const EdgeInsets.symmetric(
@@ -280,7 +280,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
                                       .textTheme
                                       .labelSmall
                                       ?.copyWith(
-                                        color: AppTheme._successGreen,
+                                        color: AppTheme.successGreen,
                                         fontWeight: FontWeight.w600,
                                       ),
                                 ),
@@ -357,7 +357,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
               child: ElevatedButton(
                 onPressed: () => context.push('/login'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme._errorRed,
+                  backgroundColor: AppTheme.errorRed,
                   minimumSize: const Size(double.infinity, 56),
                 ),
                 child: const Text('Logout'),
@@ -381,7 +381,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
       child: ListTile(
         leading: Icon(
           icon,
-          color: AppTheme._primaryBlue,
+          color: AppTheme.primaryBlue,
           size: 24,
         ),
         title: Text(
@@ -393,7 +393,7 @@ class ProfileScreenEnhanced extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+            color: AppTheme.primaryBlue.withOpacity(0.1),
           ),
         ),
       ),

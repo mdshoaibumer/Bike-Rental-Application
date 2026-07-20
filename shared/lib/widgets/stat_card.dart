@@ -91,7 +91,7 @@ class _StatCardState extends State<StatCard> with SingleTickerProviderStateMixin
                   if (widget.icon != null)
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.all(8),
@@ -139,8 +139,8 @@ class _StatCardState extends State<StatCard> with SingleTickerProviderStateMixin
                     Container(
                       decoration: BoxDecoration(
                         color: widget.trendUp
-                            ? AppTheme._successGreen.withValues(alpha: 0.2)
-                            : AppTheme._errorRed.withValues(alpha: 0.2),
+                            ? AppTheme.successGreen.withOpacity(0.2)
+                            : AppTheme.errorRed.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -155,8 +155,8 @@ class _StatCardState extends State<StatCard> with SingleTickerProviderStateMixin
                                 ? Icons.trending_up_rounded
                                 : Icons.trending_down_rounded,
                             color: widget.trendUp
-                                ? AppTheme._successGreen
-                                : AppTheme._errorRed,
+                                ? AppTheme.successGreen
+                                : AppTheme.errorRed,
                             size: 14,
                           ),
                           const SizedBox(width: 4),
@@ -164,8 +164,8 @@ class _StatCardState extends State<StatCard> with SingleTickerProviderStateMixin
                             widget.trendPercentage!,
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: widget.trendUp
-                                  ? AppTheme._successGreen
-                                  : AppTheme._errorRed,
+                                  ? AppTheme.successGreen
+                                  : AppTheme.errorRed,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
