@@ -77,17 +77,17 @@ class _BikeListScreenPremiumState extends ConsumerState<BikeListScreenPremium>
                       setState(() => _selectedCategoryIndex = index);
                     },
                     backgroundColor: Colors.transparent,
-                    selectedColor: AppTheme._primaryBlue.withValues(alpha: 0.2),
+                    selectedColor: AppTheme.primaryBlue.withOpacity(0.2),
                     side: BorderSide(
                       color: _selectedCategoryIndex == index
-                          ? AppTheme._primaryBlue
-                          : AppTheme._textTertiary,
+                          ? AppTheme.primaryBlue
+                          : AppTheme.textTertiary,
                       width: 2,
                     ),
                     labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: _selectedCategoryIndex == index
-                          ? AppTheme._primaryBlue
-                          : AppTheme._textSecondary,
+                          ? AppTheme.primaryBlue
+                          : AppTheme.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -130,7 +130,7 @@ class _BikeListScreenPremiumState extends ConsumerState<BikeListScreenPremium>
             Icon(
               Icons.error_outline_rounded,
               size: 64,
-              color: AppTheme._errorRed,
+              color: AppTheme.errorRed,
             ),
             const SizedBox(height: 16),
             Text(
@@ -143,7 +143,7 @@ class _BikeListScreenPremiumState extends ConsumerState<BikeListScreenPremium>
             Text(
               state.error ?? 'Failed to load bikes',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme._textSecondary,
+                color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

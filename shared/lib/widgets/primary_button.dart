@@ -87,8 +87,8 @@ class _PrimaryButtonState extends State<PrimaryButton>
                 border: widget.isOutlined
                     ? Border.all(
                         color: widget.isSecondary
-                            ? AppTheme._accentOrange
-                            : AppTheme._primaryBlue,
+                            ? AppTheme.accentOrange
+                            : AppTheme.primaryBlue,
                         width: 2,
                       )
                     : null,
@@ -120,8 +120,8 @@ class _PrimaryButtonState extends State<PrimaryButton>
                                 ?.copyWith(
                                   color: widget.isOutlined
                                       ? (widget.isSecondary
-                                          ? AppTheme._accentOrange
-                                          : AppTheme._primaryBlue)
+                                          ? AppTheme.accentOrange
+                                          : AppTheme.primaryBlue)
                                       : Colors.white,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 16,

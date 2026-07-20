@@ -112,7 +112,7 @@ class _PremiumNavigationBarState extends State<PremiumNavigationBar>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: isSelected
-                    ? AppTheme._primaryBlue.withValues(alpha: 0.1)
+                    ? AppTheme.primaryBlue.withOpacity(0.1)
                     : Colors.transparent,
               ),
               child: Column(
@@ -122,15 +122,15 @@ class _PremiumNavigationBarState extends State<PremiumNavigationBar>
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme._primaryBlue.withValues(alpha: 0.15)
+                          ? AppTheme.primaryBlue.withOpacity(0.15)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       item.icon,
                       color: isSelected
-                          ? AppTheme._primaryBlue
-                          : AppTheme._textSecondary,
+                          ? AppTheme.primaryBlue
+                          : AppTheme.textSecondary,
                       size: 24,
                     ),
                   ),
@@ -142,8 +142,8 @@ class _PremiumNavigationBarState extends State<PremiumNavigationBar>
                         item.label,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: isSelected
-                              ? AppTheme._primaryBlue
-                              : AppTheme._textSecondary,
+                              ? AppTheme.primaryBlue
+                              : AppTheme.textSecondary,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                           fontSize: 11,
                         ),

@@ -40,7 +40,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -137,7 +137,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                             label: 'Total Revenue',
                             value: '₹${stats.totalRevenue.toStringAsFixed(0)}',
                             icon: Icons.trending_up_rounded,
-                            color: AppTheme._successGreen,
+                            color: AppTheme.successGreen,
                             subValue: '+12% this month',
                           ),
                         ),
@@ -147,7 +147,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                             label: 'Active Bikes',
                             value: '${stats.activeBikes}',
                             icon: Icons.two_wheeler_rounded,
-                            color: AppTheme._primaryBlue,
+                            color: AppTheme.primaryBlue,
                             subValue: '${stats.totalBikes} total',
                           ),
                         ),
@@ -161,7 +161,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                             label: 'Today\'s Bookings',
                             value: '${stats.todayBookings}',
                             icon: Icons.calendar_today_rounded,
-                            color: AppTheme._accentOrange,
+                            color: AppTheme.accentOrange,
                             subValue: '${stats.totalBookings} total',
                           ),
                         ),
@@ -171,7 +171,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                             label: 'Avg Rating',
                             value: '${stats.averageRating.toStringAsFixed(1)}',
                             icon: Icons.star_rounded,
-                            color: AppTheme._warningAmber,
+                            color: AppTheme.warningAmber,
                             subValue: 'from ${stats.totalReviews} reviews',
                           ),
                         ),
@@ -201,7 +201,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                           icon: Icons.two_wheeler_rounded,
                           title: 'Manage Bikes',
                           subtitle: 'Add, edit, or remove bikes',
-                          color: AppTheme._primaryBlue,
+                          color: AppTheme.primaryBlue,
                           onTap: () => context.push('/admin/bikes'),
                         ),
                         _buildManagementCard(
@@ -209,7 +209,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                           icon: Icons.calendar_month_rounded,
                           title: 'View Bookings',
                           subtitle: 'Track all reservations',
-                          color: AppTheme._accentOrange,
+                          color: AppTheme.accentOrange,
                           onTap: () => context.push('/admin/bookings'),
                         ),
                         _buildManagementCard(
@@ -217,7 +217,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                           icon: Icons.people_rounded,
                           title: 'Customers',
                           subtitle: 'Manage customer data',
-                          color: AppTheme._successGreen,
+                          color: AppTheme.successGreen,
                           onTap: () => context.push('/admin/customers'),
                         ),
                         _buildManagementCard(
@@ -225,7 +225,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                           icon: Icons.assessment_rounded,
                           title: 'Reports',
                           subtitle: 'Analytics & insights',
-                          color: AppTheme._warningAmber,
+                          color: AppTheme.warningAmber,
                           onTap: () => context.push('/admin/reports'),
                         ),
                       ],
@@ -268,10 +268,10 @@ class DashboardScreenPremium extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.08),
+            color: color.withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: color.withValues(alpha: 0.2),
+              color: color.withOpacity(0.2),
               width: 1.5,
             ),
           ),
@@ -282,7 +282,7 @@ class DashboardScreenPremium extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
+                  color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: const EdgeInsets.all(10),
@@ -302,7 +302,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme._textSecondary,
+                      color: AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -340,12 +340,12 @@ class DashboardScreenPremium extends ConsumerWidget {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             icon,
-                            color: AppTheme._primaryBlue,
+                            color: AppTheme.primaryBlue,
                             size: 20,
                           ),
                         ),
@@ -355,7 +355,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                             child: Container(
                               width: 2,
                               height: 20,
-                              color: AppTheme._primaryBlue.withValues(alpha: 0.2),
+                              color: AppTheme.primaryBlue.withOpacity(0.2),
                             ),
                           ),
                       ],
@@ -376,7 +376,7 @@ class DashboardScreenPremium extends ConsumerWidget {
                         Text(
                           time,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme._textSecondary,
+                            color: AppTheme.textSecondary,
                           ),
                         ),
                       ],

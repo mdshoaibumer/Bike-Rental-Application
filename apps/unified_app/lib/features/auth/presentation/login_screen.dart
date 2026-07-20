@@ -166,7 +166,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 Text(
                   'Enter the 6-digit code sent to ${_phoneController.text}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme._textSecondary,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -205,7 +205,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     child: Text(
                       'Change phone number',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme._primaryBlue,
+                        color: AppTheme.primaryBlue,
                       ),
                     ),
                   ),
@@ -294,7 +294,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: const Icon(
@@ -331,17 +331,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                   decoration: BoxDecoration(
                     color: isDark
                         ? const Color(0xFF2A2A2A)
-                        : Colors.grey.withValues(alpha: 0.1),
+                        : Colors.grey.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TabBar(
                     controller: _tabController,
                     indicator: BoxDecoration(
-                      color: AppTheme._primaryBlue,
+                      color: AppTheme.primaryBlue,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelColor: Colors.white,
-                    unselectedLabelColor: AppTheme._textSecondary,
+                    unselectedLabelColor: AppTheme.textSecondary,
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelStyle: const TextStyle(
                       fontWeight: FontWeight.w600,

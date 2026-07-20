@@ -39,7 +39,7 @@ class GlassMorphismContainer extends StatelessWidget {
         border: border ??
             Border.all(
               color: (isDark ? Colors.white : Colors.black)
-                  .withValues(alpha: 0.1),
+                  .withOpacity(0.1),
               width: 1.5,
             ),
         boxShadow: boxShadow ?? AppTheme.elevatedShadow,

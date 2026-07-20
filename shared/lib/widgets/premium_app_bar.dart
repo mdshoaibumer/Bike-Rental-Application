@@ -63,7 +63,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
+                        color: Colors.white.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.all(8),
@@ -112,7 +112,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) =>
       PremiumAppBar(
         title: title,
-        backgroundColor: AppTheme._primaryBlue,
+        backgroundColor: AppTheme.primaryBlue,
         elevation: 2,
         actions: actions,
         onBackPressed: onBackPressed,

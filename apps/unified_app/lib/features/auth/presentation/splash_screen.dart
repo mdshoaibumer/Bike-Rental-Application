@@ -89,11 +89,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
+                    color: Colors.white.withOpacity(0.15),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: 20,
                         spreadRadius: 5,
                       )
@@ -154,7 +154,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     children: [
                       CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white.withValues(alpha: 0.3),
+                          Colors.white.withOpacity(0.3),
                         ),
                         strokeWidth: 2,
                       ),

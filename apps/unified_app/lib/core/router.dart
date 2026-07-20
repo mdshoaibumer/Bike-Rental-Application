@@ -9,13 +9,13 @@ import '../features/auth/presentation/login_screen.dart';
 
 // Customer screens
 import '../features/home/presentation/home_screen_enhanced.dart';
-import '../features/bikes/presentation/bike_list_screen.dart';
+import '../features/bikes/presentation/bike_list_screen_premium.dart';
 import '../features/bikes/presentation/bike_detail_screen_enhanced.dart';
 import '../features/booking/presentation/booking_history_screen.dart';
-import '../features/profile/presentation/profile_screen_enhanced.dart';
+import '../features/profile/presentation/profile_screen_premium.dart';
 
 // Admin screens
-import '../features/admin/presentation/admin_dashboard_enhanced.dart';
+import '../features/admin/dashboard/presentation/dashboard_screen_premium.dart';
 import '../features/admin/bikes/presentation/bike_management_screen.dart';
 import '../features/admin/bookings/presentation/booking_management_screen.dart';
 import '../features/admin/customers/presentation/customer_management_screen.dart';
@@ -72,7 +72,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/bikes',
-      builder: (context, state) => const BikeListScreen(),
+      builder: (context, state) => const BikeListScreenPremium(),
     ),
     GoRoute(
       path: '/bike/:id',
@@ -87,12 +87,12 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => const ProfileScreenEnhanced(),
+      builder: (context, state) => const ProfileScreenPremium(),
     ),
     // ADMIN ROUTES
     GoRoute(
       path: '/admin/dashboard',
-      builder: (context, state) => const AdminDashboardEnhanced(),
+      builder: (context, state) => const DashboardScreenPremium(),
     ),
     GoRoute(
       path: '/admin/bikes',

@@ -42,7 +42,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           boxShadow: AppTheme.elevatedShadow,
                         ),
                         child: CircleAvatar(
-                          backgroundColor: Colors.white.withValues(alpha: 0.2),
+                          backgroundColor: Colors.white.withOpacity(0.2),
                           child: const Icon(
                             Icons.person_rounded,
                             size: 50,
@@ -94,7 +94,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Total Rides',
                           value: '12',
                           icon: Icons.directions_bike_rounded,
-                          color: AppTheme._primaryBlue,
+                          color: AppTheme.primaryBlue,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -103,7 +103,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Total Spent',
                           value: '₹2,480',
                           icon: Icons.wallet_rounded,
-                          color: AppTheme._accentOrange,
+                          color: AppTheme.accentOrange,
                         ),
                       ),
                     ],
@@ -116,7 +116,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Km Travelled',
                           value: '142',
                           icon: Icons.route_rounded,
-                          color: AppTheme._successGreen,
+                          color: AppTheme.successGreen,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -125,7 +125,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                           label: 'Avg Rating',
                           value: '4.8',
                           icon: Icons.star_rounded,
-                          color: AppTheme._warningAmber,
+                          color: AppTheme.warningAmber,
                         ),
                       ),
                     ],
@@ -163,8 +163,8 @@ class ProfileScreenPremium extends ConsumerWidget {
                     title: 'KYC Verification',
                     subtitle: authState.user?['kyc_status'] ?? 'PENDING',
                     statusColor: authState.user?['kyc_status'] == 'APPROVED'
-                        ? AppTheme._successGreen
-                        : AppTheme._warningAmber,
+                        ? AppTheme.successGreen
+                        : AppTheme.warningAmber,
                     onTap: () {},
                   ),
                   const SizedBox(height: 8),
@@ -257,10 +257,10 @@ class ProfileScreenPremium extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppTheme._errorRed.withValues(alpha: 0.1),
+                      color: AppTheme.errorRed.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AppTheme._errorRed.withValues(alpha: 0.3),
+                        color: AppTheme.errorRed.withOpacity(0.3),
                         width: 1.5,
                       ),
                     ),
@@ -269,7 +269,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                       child: Text(
                         'Logout',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppTheme._errorRed,
+                          color: AppTheme.errorRed,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -304,11 +304,11 @@ class ProfileScreenPremium extends ConsumerWidget {
         child: Container(
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xFF2A2A2A).withValues(alpha: 0.5)
-                : AppTheme._surfaceLight,
+                ? const Color(0xFF2A2A2A).withOpacity(0.5)
+                : AppTheme.surfaceLight,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+              color: AppTheme.primaryBlue.withOpacity(0.1),
               width: 1,
             ),
           ),
@@ -317,13 +317,13 @@ class ProfileScreenPremium extends ConsumerWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: AppTheme._primaryBlue.withValues(alpha: 0.1),
+                  color: AppTheme.primaryBlue.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.all(10),
                 child: Icon(
                   icon,
-                  color: AppTheme._primaryBlue,
+                  color: AppTheme.primaryBlue,
                   size: 20,
                 ),
               ),
@@ -342,7 +342,7 @@ class ProfileScreenPremium extends ConsumerWidget {
                       Text(
                         subtitle,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: statusColor ?? AppTheme._textSecondary,
+                          color: statusColor ?? AppTheme.textSecondary,
                           fontWeight:
                               statusColor != null ? FontWeight.w600 : null,
                         ),
@@ -352,7 +352,7 @@ class ProfileScreenPremium extends ConsumerWidget {
               ),
               Icon(
                 Icons.chevron_right_rounded,
-                color: AppTheme._textTertiary,
+                color: AppTheme.textTertiary,
               ),
             ],
           ),
