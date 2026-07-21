@@ -1,0 +1,6 @@
+- [/] Verify Flutter SDK state and switch to `stable`
+- [ ] Run `flutter pub get` and `flutter analyze`
+- [ ] Create Pixel 8 Pro (API 35) Emulator
+- [ ] Verify Android/Gradle compatibility with JDK 21
+- [ ] Launch Emulator and run `flutter run`
+- [ ] Final Verification (`flutter doctor -v`, `flutter test`)

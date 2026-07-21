@@ -1,0 +1,126 @@
+name: Bike Rental Platform CI/CD
+
+on:
+  push:
+    branches: [main, release/*]
+  pull_request:
+    branches: [main]
+
+env:
+  GO_VERSION: '1.21'
+  FLUTTER_VERSION: '3.16.0'
+
+jobs:
+  backend-lint-test:
+    name: Backend Lint & Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: bikerental_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('backend/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download dependencies
+        working-directory: ./backend
+        run: go mod download
+
+      - name: Run vet
+        working-directory: ./backend
+        run: go vet ./...
+
+      - name: Run tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgres://test:test@localhost:5432/bikerental_test?sslmode=disable
+          JWT_SECRET: test-secret-minimum-32-characters-long
+          ENVIRONMENT: test
+        run: go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage.out
+
+  backend-build:
+    name: Backend Build
+    runs-on: ubuntu-latest
+    needs: backend-lint-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build binary
+        working-directory: ./backend
+        run: CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o main ./cmd/api
+
+      - name: Build Docker image
+        run: docker build -t bike-rental-backend:${{ github.sha }} ./backend
+
+  flutter-test:
+    name: Flutter Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [customer_app, owner_app, shared]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: ./${{ matrix.app == 'shared' && 'shared' || format('apps/{0}', matrix.app) }}
+        run: flutter pub get
+
+      - name: Analyze code
+        working-directory: ./${{ matrix.app == 'shared' && 'shared' || format('apps/{0}', matrix.app) }}
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: ./${{ matrix.app == 'shared' && 'shared' || format('apps/{0}', matrix.app) }}
+        run: flutter test --coverage || true
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [backend-build, flutter-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy notification
+        run: echo "Deployment triggered for commit ${{ github.sha }}"
+        # Add actual deployment steps (Docker push, K8s deploy, etc.)
